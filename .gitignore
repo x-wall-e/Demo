@@ -4,7 +4,7 @@
 JLinkSettings.ini
 
 # Object files
-output/
+iap/output/
 *.o
 *.ko
 *.obj
@@ -58,8 +58,8 @@ dkms.conf
 .vscode/ipch/
 
 # Keil Project
-project/
+iap/project/
 
 # Source insight 
-si/
+iap/si/
 
