@@ -5,10 +5,7 @@
 #include <string.h>
 #include "stm32f10x.h"
 #include "data_type.h"
-#include "delay.h"
 #include "init.h"
-#include "timer.h"
-#include "led.h"
 #include "hw_usart.h"
 #include "main.h"
 #endif
