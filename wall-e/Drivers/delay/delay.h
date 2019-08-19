@@ -4,4 +4,6 @@
 #include "stm32f10x.h"
 #include "misc.h"
 
+void delay_init(void);
+
 #endif

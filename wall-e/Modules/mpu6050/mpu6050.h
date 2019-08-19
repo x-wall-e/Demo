@@ -4,7 +4,7 @@
 #include "stm32f10x.h"
 #include "iic.h"
 #include "delay.h"
-#include "fusion.h"
+//#include "fusion.h"
 
 //-----MPU6050 register-----//
 #define	SMPLRT_DIV			0x19	// Gyro sampling rate,Typical value:0x07(125Hz)
@@ -20,7 +20,7 @@
 #define	TEMP_OUT_H			0x41
 #define	TEMP_OUT_L			0x42
 #define	GYRO_XOUT_H			0x43
-#define	GYRO_XOUT_L			0x44	
+#define	GYRO_XOUT_L			0x44
 #define	GYRO_YOUT_H			0x45
 #define	GYRO_YOUT_L			0x46
 #define	GYRO_ZOUT_H			0x47
@@ -66,7 +66,7 @@ extern u8 MPU6050_ReadByte(u8 reg);						// MPU6050 Single read byte
 extern void	Get_Accel_Data(u8 reg);						// Get MPU6050 Accelerometer data
 extern void	Get_Gyro_Data(u8 reg);						// Get MPU6050 Gyro data
 extern void IMU_Calibration(void);						// MPU6050 calibration
-
+extern void ReadFromIMU(void);
 
 
 #endif

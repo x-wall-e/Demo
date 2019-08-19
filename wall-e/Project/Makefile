@@ -7,7 +7,7 @@ DIR_DRIVERS   += ../Drivers/usart/
 DIR_DRIVERS   += ../Drivers/imu_iic/
 
 DIR_MODULES   += ../Modules/led/
-#DIR_MODULES   += ../Modules/mpu6050/
+DIR_MODULES   += ../Modules/mpu6050/
 
 DIR_INCLUDE   += -I../Libraries/CMSIS/ \
                  -I../Libraries/FWLib/inc/ \
