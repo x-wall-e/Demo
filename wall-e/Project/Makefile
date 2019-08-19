@@ -2,9 +2,12 @@ PROJECT := demo
 
 
 
-DIR_DRIVERS   += ../Drivers/Driver_Delay/
+DIR_DRIVERS   += ../Drivers/delay/
+DIR_DRIVERS   += ../Drivers/usart/
+DIR_DRIVERS   += ../Drivers/imu_iic/
 
-DIR_MODULES   += ../Modules/Module_MPU6050/
+DIR_MODULES   += ../Modules/led/
+#DIR_MODULES   += ../Modules/mpu6050/
 
 DIR_INCLUDE   += -I../Libraries/CMSIS/ \
                  -I../Libraries/FWLib/inc/ \
@@ -50,7 +53,9 @@ OPT   += -fno-common
 OPT   += -ffunction-sections
 OPT   += -fdata-sections
 
-SPECS := --specs=rdimon.specs -u _printf_float
+#SPECS := --specs=rdimon.specs -u _printf_float
+#For use printf
+SPECS := --specs=nosys.specs -u _printf_float
 
 FLAGS_MCU := -mcpu=$(MCU)
 FLAGS_AS  := $(SPECS) $(FLAGS_MCU) $(OPT) -c -g -gdwarf-2 -mthumb
