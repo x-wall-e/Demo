@@ -3,7 +3,7 @@ PROJECT := demo
 
 
 DIR_DRIVERS   += ../Drivers/delay/
-DIR_DRIVERS   += ../Drivers/usart/
+DIR_DRIVERS   += ../Drivers/debug_usart1/
 DIR_DRIVERS   += ../Drivers/imu_iic/
 
 DIR_MODULES   += ../Modules/led/

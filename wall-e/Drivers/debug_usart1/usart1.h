@@ -21,7 +21,7 @@ extern uint8_t TxBuffer[TxBufferSize];		// 发送缓冲区
 extern uint8_t RxBuffer[RxBufferSize];		// 接收缓冲区
 #endif
 //-----函数-----//
-extern void USART_Configuration(void);
+extern void Uart1_Init(void);
 
 void Uart1_PutChar(u8 ch);						// 串口1发送字符
 void Uart1_PutString(u8 * buf, const u8 len);	// 串口1发送字符串

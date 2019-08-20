@@ -19,13 +19,13 @@ static void USART_GPIO_Configuration(void)
   GPIO_Init(GPIOA, &GPIO_InitStructure);
 }
 /*************************************
-函数名：void USART_Configuration(void)
+函数名：void Uart1_Init(void)
 说明：USART初始化
 入口：无
 出口：无
 备注：无
 *************************************/
-void USART_Configuration(void)
+void Uart1_Init(void)
 {
 	USART_InitTypeDef USART_InitStructure;
 
