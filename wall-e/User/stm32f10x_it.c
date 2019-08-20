@@ -8,11 +8,6 @@ void SysTick_Handler(void)
 
 }
 
-void TIM4_IRQHandler(void)
-{
-
-}
-
 void USART1_IRQHandler(void)
 {
 

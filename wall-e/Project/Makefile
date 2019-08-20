@@ -4,10 +4,13 @@ PROJECT := demo
 
 DIR_DRIVERS   += ../Drivers/delay/
 DIR_DRIVERS   += ../Drivers/debug_usart1/
+DIR_DRIVERS   += ../Drivers/bluetooth_usart3/
 DIR_DRIVERS   += ../Drivers/imu_iic/
 
 DIR_MODULES   += ../Modules/led/
 DIR_MODULES   += ../Modules/mpu6050/
+DIR_MODULES   += ../Modules/bluetooth/
+DIR_MODULES   += ../Modules/encoder/
 
 DIR_INCLUDE   += -I../Libraries/CMSIS/ \
                  -I../Libraries/FWLib/inc/ \

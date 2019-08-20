@@ -1,5 +1,5 @@
-#ifndef __USART_H
-#define __USART_H
+#ifndef __USART1_H
+#define __USART1_H
 
 #include "stdio.h"
 #include "stm32f10x.h"

@@ -4,7 +4,7 @@ const char ATcmdAsk[]    =		 {"AT"};
 const char ATcmdNameSet[] = 	 {"AT+NAMEWall-e"};    //Set bluetooth module name：Wall-e
 const char ATcmdCodeSet[] =		 {"AT+PIN1234"};       //Set bluetooth module pin：1234
 const char ATcmdRenewAsk[] = 	 {"AT+RENEW"};		   //Reset bluetooth module
-const char ATcmdRenewAnswer[] = {"OK+RENEW"};	
+const char ATcmdRenewAnswer[] = {"OK+RENEW"};
 const char ATcmdBaudSet[] =    {"AT+BAUD8"};           //Set bluetooth module baud:115200
 
 /*******************************************************************
@@ -39,14 +39,14 @@ void BT_ATcmdWrite(void)
 	delay_ms(100);
 	Uart3SendStr("AT\r\n");
 	Uart3SendStr("AT+NAMEWall-e\r\n");	 //Set bluetooth module name：Wall-e
-	delay_ms(100);	
+	delay_ms(100);
 	Uart3SendStr("AT+BAUD8\r\n"); 		 //Set bluetooth module baud:115200
-	delay_ms(100);		
+	delay_ms(100);
 }
 
 /**************************************************************************
 Function:void BT_PowerInit(void)
-Description: 
+Description:
 	Bluetooth transparent transmission module power initialization function
 		1. Power-on enabler: BT_EN - PB2
 		2. Turn on the Bluetooth power supply: BT_EN=1
@@ -60,10 +60,10 @@ void BT_PowerInit(void)
 
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
 
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_Init(GPIOB,  &GPIO_InitStructure);
-  
+
   BT_on();
 }
