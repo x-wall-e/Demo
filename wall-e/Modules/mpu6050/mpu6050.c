@@ -64,6 +64,8 @@ Others:None
 
 void MPU6050_Init(void)
 {
+    MPU6050_WirteByte(PWR_MGMT_1, 0x80);
+    delay_ms(1000);
 	/*
 		- Release the sleep state
 		- Enable the temperature sensor
@@ -75,7 +77,7 @@ void MPU6050_Init(void)
 		- Related to DLPF
 		- The larger the bandwidth, the more sensitive, the louder the noise, the larger the output frequency required, and the larger the sampling rate
 	*/
-    MPU6050_WirteByte(SMPLRT_DIV, 0x01);
+    MPU6050_WirteByte(SMPLRT_DIV, 0x07);//0x01
 	/*
 		- The bandwidth in DLPF is set to a minimum of 5 Hz
 		- Although it is not sensitive, but the noise is small
@@ -86,11 +88,11 @@ void MPU6050_Init(void)
 		- Sampling frequency: (SMPLRT_DIV + 1) / 1KHz = 500Hz
 		- Gyroscope output frequency: 1KHz
 	*/
-    MPU6050_WirteByte(GYRO_CONFIG, 0x08);
+    MPU6050_WirteByte(GYRO_CONFIG, 0x18);//0x08
 	/*
 		- The range is +/-4g
 	*/
-    MPU6050_WirteByte(ACCEL_CONFIG, 0x08);
+    MPU6050_WirteByte(ACCEL_CONFIG, 0x01);//0x08
 }
 
 /*************************************

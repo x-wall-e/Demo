@@ -26,6 +26,7 @@
 #define	GYRO_ZOUT_H			0x47
 #define	GYRO_ZOUT_L			0x48
 #define	PWR_MGMT_1			0x6B	// Power management,Typical value:0x00(Normally enabled)
+#define WHO_AM_I				0x75  // The default value of the register is 0x68. Bits 0 and 7 are reserved. (Hard coded to 0)
 
 
 //-----MPU6050 slave address·-----//
