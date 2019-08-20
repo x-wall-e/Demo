@@ -1,13 +1,17 @@
 #include "usart3.h"
 
-/*************************************
+/******************************************************************************************
 Function:void uart3_init(u32 bound)
 Description:Initial uart3
 Input:None
 Return:None
-Others:None
-*************************************/
-void Uart3_Init(void)
+Others:
+	Bluetooth module default communication baud rate is 9600.
+		1.Uart3 is initialized to the baud rate (9600) that can communicate with Bluetooth. 
+		2.Set bluetooth module baud rate:115200.
+		3.Re-initialize uart3 to the baud rate 115200.
+*******************************************************************************************/
+void Uart3_Init(u32 bound)
 {  	 
 	//GPIO Configuration
   	GPIO_InitTypeDef GPIO_InitStructure;
@@ -28,7 +32,7 @@ void Uart3_Init(void)
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
 	//USART Configuration
-	USART_InitStructure.USART_BaudRate = 9600;// Serial port 3 is initialized to the baud rate that can communicate with Bluetooth. Bluetooth default communication baud rate is 9600.
+	USART_InitStructure.USART_BaudRate = bound;// 
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;//Word length: 8-bit 
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;//StopBits: 1-bit
 	USART_InitStructure.USART_Parity = USART_Parity_No;//No parity

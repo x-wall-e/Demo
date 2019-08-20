@@ -52,9 +52,11 @@ static void prvSetupHardware(void)
 	/* USART1 Configuration */
 	Uart1_Init();
 	/* USART3 Configuration */
-	//Uart3_Init();
+	//Uart3_Init(9600);
 	/* Bluetooth Power On */
 	//BT_PowerInit();
+	/* USART3 Re-Configuration */
+	//Uart3_Init(115200);
 }
 
 int main(void)
