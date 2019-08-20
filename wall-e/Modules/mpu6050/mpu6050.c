@@ -1,7 +1,7 @@
 #include "mpu6050.h"
 
 //-----IMUֱ direct sampled data structure-----//
-struct MPU6050_tag g_MPU6050Data;
+extern struct MPU6050_tag g_MPU6050Data;
 //-----IMU filtered, calibrated data structure-----//
 struct MPU6050Filter_tag g_MPU6050Data_Filter;
 //-----IMU calibration parameter-----//
@@ -56,7 +56,7 @@ u8 MPU6050_ReadByte(u8 reg)
 
 /*************************************
 Function：void MPU6050_Init(void)
-Description：Initial MPU6050 
+Description：Initial MPU6050
 Input:None
 Return:None
 Others:None
@@ -68,29 +68,29 @@ void MPU6050_Init(void)
 		- Release the sleep state
 		- Enable the temperature sensor
 	*/
-    MPU6050_WirteByte(PWR_MGMT_1, 0x00);            
+    MPU6050_WirteByte(PWR_MGMT_1, 0x00);
 	/*
 		- Gyro and accelerometer sampling rates
 		- Related to the gyroscope output frequency
 		- Related to DLPF
 		- The larger the bandwidth, the more sensitive, the louder the noise, the larger the output frequency required, and the larger the sampling rate
 	*/
-    MPU6050_WirteByte(SMPLRT_DIV, 0x01);    
+    MPU6050_WirteByte(SMPLRT_DIV, 0x01);
 	/*
 		- The bandwidth in DLPF is set to a minimum of 5 Hz
 		- Although it is not sensitive, but the noise is small
-	*/       
-    MPU6050_WirteByte(MPU6050_CONFIG, 0x06);        
+	*/
+    MPU6050_WirteByte(MPU6050_CONFIG, 0x06);
 	/*
 		- The range is 500°/s
 		- Sampling frequency: (SMPLRT_DIV + 1) / 1KHz = 500Hz
 		- Gyroscope output frequency: 1KHz
 	*/
-    MPU6050_WirteByte(GYRO_CONFIG, 0x08);          
+    MPU6050_WirteByte(GYRO_CONFIG, 0x08);
 	/*
 		- The range is +/-4g
 	*/
-    MPU6050_WirteByte(ACCEL_CONFIG, 0x08);         
+    MPU6050_WirteByte(ACCEL_CONFIG, 0x08);
 }
 
 /*************************************

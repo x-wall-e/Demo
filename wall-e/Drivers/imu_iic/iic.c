@@ -45,7 +45,7 @@ void IIC_Start(void)
     IIC_SCL_H;
     delay_us(4);
     IIC_SDA_L;
-    //delay_us(1);
+    delay_us(1);
     IIC_SCL_L;//Hold the clock line SCL LOW and prepare to send or receive data
 }
 
@@ -62,7 +62,7 @@ void IIC_Stop(void)
     IIC_SDA_L;
     delay_us(4);
     IIC_SCL_H;
-    //delay_us(1);
+    delay_us(1);
     IIC_SDA_H;// Send I2C bus end signal
     delay_us(5);// Start again requires 4.7us
 }
@@ -80,9 +80,9 @@ u8 IIC_Wait_Ack(void)
 
     SDA_IN();                   // SDA is set to input
     IIC_SDA_H;
-    //delay_us(1);
+    delay_us(1);
     IIC_SCL_H;
-    //delay_us(1);
+    delay_us(1);
     while (READ_SDA)            // SDA is high, waiting for the IIC device to pull low
     {
         ucErrTime++;
@@ -108,9 +108,9 @@ void IIC_Ack(void)
     IIC_SCL_L;
     SDA_OUT();
     IIC_SDA_L;
-    //delay_us(1);
+    delay_us(1);
     IIC_SCL_H;
-    //delay_us(1);
+    delay_us(1);
     IIC_SCL_L;
 }
 
@@ -126,9 +126,9 @@ void IIC_NAck(void)
     IIC_SCL_L;
     SDA_OUT();
     IIC_SDA_H;
-    //delay_us(1);
+    delay_us(1);
     IIC_SCL_H;
-    //delay_us(1);
+    delay_us(1);
     IIC_SCL_L;
 }
 
@@ -152,9 +152,9 @@ void IIC_Send_Byte(u8 txd)
             else
                 IIC_SDA_L;
             txd <<= 1;
-            //delay_us(1);
+            delay_us(1);
             IIC_SCL_H;
-            //delay_us(1);
+            delay_us(1);
             IIC_SCL_L;
     }
     IIC_Wait_Ack();
@@ -177,12 +177,12 @@ u8 IIC_Read_Byte(u8 ack)
     for (i = 0; i < 8; i++)
     {
         IIC_SCL_L;
-        //delay_us(1);
+        delay_us(1);
         IIC_SCL_H;
         receive <<= 1;
         if (READ_SDA)       // 1
             receive++;
-        //delay_us(1);
+        delay_us(1);
     }
     if (!ack)
             IIC_NAck();     // send nACK
