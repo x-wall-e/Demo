@@ -4,6 +4,7 @@
 #include "stm32f10x.h"
 #include "iic.h"
 #include "delay.h"
+#include <stdio.h>
 //#include "fusion.h"
 
 //-----MPU6050 register-----//

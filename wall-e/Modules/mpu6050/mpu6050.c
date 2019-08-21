@@ -12,7 +12,7 @@ s32 g_Acc_xoffset = 0, g_Acc_yoffset = 0, g_Acc_zoffset = 0;
 
 /*************************************
 Function：void MPU6050_WirteByte(u8 reg, u8 data)
-Description：MPU6050 single-byte write 
+Description：MPU6050 single-byte write
 Input:
 	u8 reg：Register address
 	u8 data：Bytes to be written
@@ -30,7 +30,7 @@ void MPU6050_WirteByte(u8 reg, u8 data)
 
 /*************************************
 Function：u8 MPU6050_ReadByte(u8 reg)
-Description：MPU6050 single-byte read 
+Description：MPU6050 single-byte read
 Input:
 	u8 reg：Register address
 Return:
@@ -65,7 +65,7 @@ Others:None
 void MPU6050_Init(void)
 {
     MPU6050_WirteByte(PWR_MGMT_1, 0x80);
-    delay_ms(1000);
+    delay_ms(100);
 	/*
 		- Release the sleep state
 		- Enable the temperature sensor

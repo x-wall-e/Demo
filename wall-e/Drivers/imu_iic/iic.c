@@ -26,7 +26,7 @@ Others:None
 *************************************/
 void MPU6050_IIC_Init(void)
 {
-    IIC_GPIO_Configuration();
+    MPU6050_IIC_GPIO_Configuration();
     GPIO_SetBits(GPIOB, GPIO_Pin_6| GPIO_Pin_7);
 }
 
@@ -80,12 +80,12 @@ u8 IIC_Wait_Ack(void)
     u8 ucErrTime = 0;
 
     SDA_IN(); /* SDA is set to input */
-	
+
     IIC_SDA_H;
     delay_us(1);
     IIC_SCL_H;
     delay_us(1);
-	
+
     while (READ_SDA) /* SDA is high, waiting for the IIC device to pull low */
     {
         ucErrTime++;
@@ -147,9 +147,9 @@ void IIC_Send_Byte(u8 txd)
     u8 t;
 
     SDA_OUT();
-	
+
     IIC_SCL_L; /* The High or Low state of the data line can only change whe the clock signal on the SCL line is LOW */
-    
+
 	for (t = 0; t < 8; t++)
     {
             if ((txd & 0x80) >> 7) /* MSB */
@@ -179,7 +179,7 @@ u8 IIC_Read_Byte(u8 ack)
     u8 i, receive = 0;
 
     SDA_IN();/* SDA is set to input */
-	
+
     for (i = 0; i < 8; i++)
     {
         IIC_SCL_L;

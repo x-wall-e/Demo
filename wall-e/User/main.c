@@ -36,11 +36,11 @@
 	MOTOR:
 		- VCC - 5V
 		- GND
-		
+
 		//MOTOR-A
-		- In1 - PA8(TIM1-CH1) 
+		- In1 - PA8(TIM1-CH1)
 		- In2 - GND
-		
+
 		//MOTOR-B
 		- In3 - GND
 		- In4 - PA11(TIM1-CH4)
@@ -53,10 +53,11 @@
 #include "usart1.h"
 #include "mpu6050.h"
 //#include "nvic.h"
-//#include "encoder.h"
+#include "encoder.h"
 //#include "usart3.h"
 //#include "bluetooth.h"
 //#include "pwm.h"
+//#include "oled.h"
 #include <stdio.h>
 
 /****************************Global Variable*************************************/
@@ -77,8 +78,7 @@ static void prvSetupHardware(void)
 	delay_init();
 	delay_ms(5000);
 	/* IMU IIC Configuration */
-	IIC_Init();
-	delay_ms(5000);
+	MPU6050_IIC_Init();
 	/* MPU6050 Configuration */
 	MPU6050_Init();
 	/* USART1 Configuration */
@@ -95,7 +95,13 @@ static void prvSetupHardware(void)
 	//Encoder_Init_TIM2();
 	//Encoder_Init_TIM4();
 	/* Init PWM 10KHZ for motor */
-	//TIM1_PWM_Init(7199,0);   			  
+	//TIM1_PWM_Init(7199,0);
+	/* IMU IIC Configuration */
+	//OLED_IIC_Init();
+	/* MPU6050 Configuration */
+	//OLED_Init();
+	//OLED_Clear();
+	//OLED_ShowString(0,4,"DAYUTC OLED Test",12);
 }
 
 int main(void)
@@ -106,24 +112,26 @@ int main(void)
 
 	prvSetupHardware();
 
-	printf("\r\n Hello Wall-e. \r\n");
+	//printf("\r\n Hello Wall-e. \r\n");
 
  	while(1)
 	{
 			ReadFromIMU();
-			reg = MPU6050_ReadByte(WHO_AM_I);
-			printf("\r\nreg = %02x\r\n",reg);
+			reg = MPU6050_ReadByte(0x6c);
+			//printf("\r\nreg = %02x\r\n",reg);
 
-			LED_Test();
+			//LED_Test();
 
 			/* Find why printf can not use \t */
 			//printtf("\r\nax: %02f \tay: %02f \taz: %02f \t",g_MPU6050Data.accel_x,g_MPU6050Data.accel_y,g_MPU6050Data.accel_z);
-			printf("\r\nax: %02f \r\nay: %02f \r\naz: %02f \r\n",g_MPU6050Data.accel_x,g_MPU6050Data.accel_y,g_MPU6050Data.accel_z);
-			delay_ms(200);
-			printf("\r\ngx: %02f \r\ngy: %02f \r\ngz: %02f \r\n",g_MPU6050Data.gyro_x,g_MPU6050Data.gyro_y,g_MPU6050Data.gyro_z);
-			delay_ms(200);
+			//printf("\r\nax: %02f \r\nay: %02f \r\naz: %02f \r\n",g_MPU6050Data.accel_x,g_MPU6050Data.accel_y,g_MPU6050Data.accel_z);
+			//delay_ms(200);
+			//printf("\r\ngx: %02f \r\ngy: %02f \r\ngz: %02f \r\n",g_MPU6050Data.gyro_x,g_MPU6050Data.gyro_y,g_MPU6050Data.gyro_z);
+			//delay_ms(200);
 
 			/* Encoder Test */
 			//printf("\r\nencoder2 = %d , encoder4 = %d\r\n",-Read_Encoder(2),Read_Encoder(4));
+			//encoder2 = Read_Encoder(2);
+			//printf("\r\n encoder2 = %d\r\n",encoder2);
 	}
 }
