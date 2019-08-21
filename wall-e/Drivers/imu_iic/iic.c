@@ -7,7 +7,7 @@ Input:None
 Return:None
 Others:None
 *************************************/
-static void IIC_GPIO_Configuration(void)
+static void MPU6050_IIC_GPIO_Configuration(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
@@ -18,13 +18,13 @@ static void IIC_GPIO_Configuration(void)
 }
 
 /*************************************
-Function：void IIC_Init(void)
+Function：void MPU6050_IIC_Init(void)
 Description：iic initialization
 Input:None
 Return:None
 Others:None
 *************************************/
-void IIC_Init(void)
+void MPU6050_IIC_Init(void)
 {
     IIC_GPIO_Configuration();
     GPIO_SetBits(GPIOB, GPIO_Pin_6| GPIO_Pin_7);
@@ -71,7 +71,8 @@ void IIC_Stop(void)
 Function：u8 IIC_Wait_Ack(void)
 Description：Waiting for the response signal to arrive.
 Input:None
-Return:None
+Return:u8	1: receive ACK fail
+			0: receive ACK success
 Others:None
 ******************************************************/
 u8 IIC_Wait_Ack(void)
@@ -173,7 +174,7 @@ u8 IIC_Read_Byte(u8 ack)
 {
     u8 i, receive = 0;
 
-    SDA_IN();   // 设置为输入
+    SDA_IN();  //设置为输入
     for (i = 0; i < 8; i++)
     {
         IIC_SCL_L;

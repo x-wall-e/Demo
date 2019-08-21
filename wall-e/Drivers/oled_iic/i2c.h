@@ -19,7 +19,7 @@
 #define READ_SDA     GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_11) // 输入SDA
 
 //-----IIC所有操作函数-----//
-void OLED_IIC_Configuration(void); // 初始化IIC的IO口
+void OLED_IIC_Init(void); // 初始化IIC的IO口
 void OLED_IIC_Start(void);			    // 发送IIC开始信号
 void OLED_IIC_Stop(void);          // 发送IIC停止信号
 void OLED_IIC_Send_Byte(u8 txd);		// IIC发送一个字节

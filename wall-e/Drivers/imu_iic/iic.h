@@ -19,7 +19,7 @@
 #define READ_SDA    GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_7)  // Input SDA
 
 
-void IIC_Init(void);			//iic initialization
+void MPU6050_IIC_Init(void);			//iic initialization
 void IIC_Start(void);			//Generate iic start signal
 void IIC_Stop(void);	  		//Generate iic stop signal
 void IIC_Send_Byte(u8 txd);		//iic send a byte
