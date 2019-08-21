@@ -11,9 +11,9 @@
 		- VCC - 3.3V
 		- GND
 	OLED:
-		- SCL
-		- SDA
-		- VCC
+		- SCL - PB10
+		- SDA - PB11
+		- VCC - 3.3V
 		- GND
 	BLUETOOTH:
 		// USART3
@@ -34,6 +34,16 @@
 		- VCC - 3.3V
 		- GND
 	MOTOR:
+		- VCC - 5V
+		- GND
+		
+		//MOTOR-A
+		- In1 - PA8(TIM1-CH1) 
+		- In2 - GND
+		
+		//MOTOR-B
+		- In3 - GND
+		- In4 - PA11(TIM1-CH4)
 
 *********************************************************************************/
 
@@ -46,6 +56,7 @@
 //#include "encoder.h"
 //#include "usart3.h"
 //#include "bluetooth.h"
+//#include "pwm.h"
 #include <stdio.h>
 
 /****************************Global Variable*************************************/
@@ -83,6 +94,8 @@ static void prvSetupHardware(void)
 	/* Encoder Configuration*/
 	//Encoder_Init_TIM2();
 	//Encoder_Init_TIM4();
+	/* Init PWM 10KHZ for motor */
+	//TIM1_PWM_Init(7199,0);   			  
 }
 
 int main(void)
