@@ -1,5 +1,12 @@
 #include "i2c.h"
 
+/******************************************************
+Function：static void OLED_IIC_GPIO_Configuration(void)
+Description：iic gpio configuration
+Input:None
+Return:None
+Others:None
+*******************************************************/
 static void OLED_IIC_GPIO_Configuration(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
@@ -11,11 +18,11 @@ static void OLED_IIC_GPIO_Configuration(void)
 }
 
 /****************************************
-函数名：void OLED_IIC_Init(void)
-说明：IIC初始化
-入口：无
-出口：无
-备注：均输出高电平
+Function：void OLED_IIC_Init(void)
+Description：iic initialization
+Input:None
+Return:None
+Others:None
 *****************************************/
 void OLED_IIC_Init(void)
 {

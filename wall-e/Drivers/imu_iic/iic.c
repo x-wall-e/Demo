@@ -11,10 +11,10 @@ static void MPU6050_IIC_GPIO_Configuration(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_6;// PB6、PB7-->IIC
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;// 推挽输出
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;// 50MHz翻转频率
-  GPIO_Init(GPIOB, &GPIO_InitStructure);// 初始化IO
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_6;/* PB6、PB7 --> IIC */
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;/* 推挽输出 */
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;/* 50MHz翻转频率 */
+  GPIO_Init(GPIOB, &GPIO_InitStructure);
 }
 
 /*************************************
@@ -40,13 +40,13 @@ Others:None
 *************************************/
 void IIC_Start(void)
 {
-    SDA_OUT();//SDA is set to output
+    SDA_OUT();/* SDA is set to output */
     IIC_SDA_H;
     IIC_SCL_H;
     delay_us(4);
     IIC_SDA_L;
     delay_us(1);
-    IIC_SCL_L;//Hold the clock line SCL LOW and prepare to send or receive data
+    IIC_SCL_L; /* Hold the clock line SCL LOW and prepare to send or receive data */
 }
 
 /************************************
@@ -58,13 +58,13 @@ Others:None
 ************************************/
 void IIC_Stop(void)
 {
-    SDA_OUT();// SDA is set to output
+    SDA_OUT();/* SDA is set to output */
     IIC_SDA_L;
     delay_us(4);
     IIC_SCL_H;
     delay_us(1);
-    IIC_SDA_H;// Send I2C bus end signal
-    delay_us(5);// Start again requires 4.7us
+    IIC_SDA_H;
+    delay_us(5);/* Start again requires 4.7us */
 }
 
 /*****************************************************
@@ -79,15 +79,17 @@ u8 IIC_Wait_Ack(void)
 {
     u8 ucErrTime = 0;
 
-    SDA_IN();                   // SDA is set to input
+    SDA_IN(); /* SDA is set to input */
+	
     IIC_SDA_H;
     delay_us(1);
     IIC_SCL_H;
     delay_us(1);
-    while (READ_SDA)            // SDA is high, waiting for the IIC device to pull low
+	
+    while (READ_SDA) /* SDA is high, waiting for the IIC device to pull low */
     {
         ucErrTime++;
-        if (ucErrTime > 250)    // 40*250=1ms did not reply, IIC master send a stop signal
+        if (ucErrTime > 250) /* 40*250=1ms did not reply, IIC master send a stop signal */
         {
             IIC_Stop();
             return 1;
@@ -145,10 +147,12 @@ void IIC_Send_Byte(u8 txd)
     u8 t;
 
     SDA_OUT();
-    IIC_SCL_L;     //The High or Low state of the data line can only change whe the clock signal on the SCL line is LOW
-    for (t = 0; t < 8; t++)
+	
+    IIC_SCL_L; /* The High or Low state of the data line can only change whe the clock signal on the SCL line is LOW */
+    
+	for (t = 0; t < 8; t++)
     {
-            if ((txd&0x80) >> 7)
+            if ((txd & 0x80) >> 7) /* MSB */
                 IIC_SDA_H;
             else
                 IIC_SDA_L;
@@ -174,7 +178,8 @@ u8 IIC_Read_Byte(u8 ack)
 {
     u8 i, receive = 0;
 
-    SDA_IN();  //设置为输入
+    SDA_IN();/* SDA is set to input */
+	
     for (i = 0; i < 8; i++)
     {
         IIC_SCL_L;
