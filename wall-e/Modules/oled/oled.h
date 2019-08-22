@@ -2,6 +2,8 @@
 #define __OLED_H
 
 #include "stm32f10x.h"
+#include "i2c.h"
+#include "delay.h"
 
 //OLED的显存
 //存放格式如下.
@@ -13,6 +15,8 @@
 //[5]0 1 2 3 ... 127	
 //[6]0 1 2 3 ... 127	
 //[7]0 1 2 3 ... 127 			   
+
+#define Max_Column	128
 
 #define OLED_CMD  0	//写命令
 #define OLED_DATA 1	//写数据
