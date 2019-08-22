@@ -1,16 +1,64 @@
-/**********************************************************
-	2-way DC Motor Drive Module Logical Truth Table
+/********************************************
+Function：void Motor_Init(void)
+Description: Motor Initial
+Input:None
+Return:None
+Others:
+	AIN1 - PB14
+	AIN2 - PB15
+	BIN1 - PB13
+	BIN2 - PB12
+*********************************************/
+void Motor_Init(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
 	
-							In1		In2		In3		In4
-	Motor-A :	Forward :	1/pwm		0
-				Reverse :		0	1/pwm
-				Standby :		0		0
-				Brake	:		1		1
-				
-							In1		In2		In3		In4
-	Motor-B :	Forward :					1/pwm		0
-				Reverse :						0	1/pwm
-				Standby :						0		0
-				Brake	:						1		1
-				
-**********************************************************/
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE); 
+	
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	
+	AIN1=0,AIN2=0;
+	BIN1=0,BIN1=0;
+}
+
+
+/**********************************************************************
+Function：int myabs(int a)
+Description: Absolute value function
+Input:
+	int a
+Return:
+	unsigned int |a|
+Others:
+	Only The timer PWM register can only be assigned a positive value. 
+***********************************************************************/
+int myabs(int a)
+{ 		   
+	  int temp;
+		if(a<0)  temp=-a;  
+	  else temp=a;
+	  return temp;
+}
+
+/**********************************************************************
+Function：void Set_Pwm(int moto1,int moto2)
+Description: Set pwm register for moto1、moto2
+Input:
+	int moto1: moto1 pwm
+	int moto2: moto2 pwm
+Return:None
+Others:None
+***********************************************************************/
+void Set_Pwm(int moto1,int moto2)
+{
+	if(moto1 < 0)	AIN2=1,			AIN1=0;
+	else 	    AIN2=0,			AIN1=1;
+	PWMA=myabs(moto1);
+	
+	if(moto2 < 0)	BIN1=0,			BIN2=1;
+	else        BIN1=1,			BIN2=0;
+	PWMB=myabs(moto2);	
+}
