@@ -91,12 +91,12 @@ void MPU6050_Init(void)
 		- The range is +/-4g
 	*/
     MPU6050_WirteByte(ACCEL_CONFIG, 0x08);
-	
+
 	#if 0
-	MPU6050_WirteByte(PWR_MGMT_1, 0x80); 	//0x6B: Resets all internal registers to their default values.										
+	MPU6050_WirteByte(PWR_MGMT_1, 0x80); 	//0x6B: Resets all internal registers to their default values.
 											//		The bit automatically clears to 0 once the reset is done.
     delay_ms(100);
-	
+
     MPU6050_WirteByte(PWR_MGMT_1, 0x00);	//0x6B: Release the sleep state and enable the temperature sensor.
 	MPU6050_WirteByte(GYRO_CONFIG, 0x08);	//0x1B: ±2000dps
 	MPU6050_WirteByte(ACCEL_CONFIG, 0x00);	//0x1C: ±2g
@@ -107,7 +107,7 @@ void MPU6050_Init(void)
 	MPU_Write_Byte(MPU_USER_CTRL_REG,0X00);	//0x6A: Disable I2C master mode
 	MPU_Write_Byte(MPU_FIFO_EN_REG,0X00);	//0x23: Disable FIFO
 	MPU_Write_Byte(MPU_INTBP_CFG_REG,0X80);	//0x37: The logic level for the INT pin is active low.
-	
+
 	if(MPU6050_testConnection())
 	{
 		MPU_Write_Byte(PWR_MGMT_1,0X01);		//0x6B：CLKSEL：PLL with X axis gyroscope reference
@@ -122,14 +122,14 @@ void MPU6050_Init(void)
 Function：void MPU6050_getDeviceID(u8 reg)
 Description：read  MPU6050 WHO_AM_I register
 Input:None
-Return:	
-	uint8_t: 0x68 
+Return:
+	uint8_t: 0x68
 Others:None
 ***********************************************************************/
-static uint8_t MPU6050_getDeviceID(void) 
+static uint8_t MPU6050_getDeviceID(void)
 {
 	uint8_t id;
-	
+
     IIC_Start();
     IIC_Send_Byte(MPU6050_DEVICE);              // Transmit device address + write signal
     IIC_Send_Byte(WHO_AM_I);                    // Register address to be read
@@ -137,7 +137,7 @@ static uint8_t MPU6050_getDeviceID(void)
     IIC_Send_Byte(MPU6050_DEVICE + 1);          // Transmit device address + read signal
     id = IIC_Read_Byte(0);                      // Reading data and generate nACK
     IIC_Stop();
-	
+
     return id;
 }
 
@@ -145,36 +145,37 @@ static uint8_t MPU6050_getDeviceID(void)
 Function：void MPU6050_testConnection(void)
 Description：Test mpu6050 connection
 Input:None
-Return:	
+Return:
 		1: Connect ok.
 		2: No connection.
 Others:None
 ***********************************************************************/
-static uint8_t MPU6050_testConnection(void) 
+static uint8_t MPU6050_testConnection(void)
 {
 	if(MPU6050_getDeviceID() == 0x68)  //0b01101000;
 		return 1;
-	else 
+	else
 		return 0;
 }
 
 /**********************************************************************
-Function：void MPU6050_Check(void) 
+Function：void MPU6050_Check(void)
 Description：Check MPU6050 found or not
 Input:None
 Return:None
 Others:None
 ***********************************************************************/
-void MPU6050_Check(void) 
-{ 
+void MPU6050_Check(void)
+{
   switch(MPU6050_testConnection())
   {
     case 0:
-		printf("MPU6050 not found...\r\n");
-		break;
+		    printf("MPU6050 not found...\r\n");
+		    break;
     case 1:
-		printf("MPU6050 check success...\r\n");
-		break;
+		    printf("MPU6050 check success...\r\n");
+		    break;
+  }
 }
 
 /*********************************************
@@ -190,20 +191,20 @@ short MPU_Get_Temperature(void)
 	u8 H1, L1;
 	short raw;
 	float temp;
-	
-	IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE);              // Transmit device address + write signal
-    IIC_Send_Byte(reg);                         // Register address to be read
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE + 1);          // Transmit device address + read signal
-    H1 = IIC_Read_Byte(1);                      // Reading data and generate ACK
-    L1 = IIC_Read_Byte(0);                      // Read from low to high in order of address
-    IIC_Stop();
 
-    raw = (H1 << 8) + L1;
+  IIC_Start();
+  IIC_Send_Byte(MPU6050_DEVICE);              // Transmit device address + write signal
+  IIC_Send_Byte(TEMP_OUT_H);                         // Register address to be read
+  IIC_Start();
+  IIC_Send_Byte(MPU6050_DEVICE + 1);          // Transmit device address + read signal
+  H1 = IIC_Read_Byte(1);                      // Reading data and generate ACK
+  L1 = IIC_Read_Byte(0);                      // Read from low to high in order of address
+  IIC_Stop();
+
+  raw = (H1 << 8) + L1;
 
 	temp = 36.53 + ((double)raw)/340;
-	
+
 	return temp * 100;;
 }
 

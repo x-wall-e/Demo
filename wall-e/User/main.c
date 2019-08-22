@@ -96,37 +96,41 @@ static void prvSetupHardware(void)
 	Encoder_Init_TIM3();
 	/* Init PWM 10KHZ for motor */
 	//TIM1_PWM_Init(7199,0);
-	/* IMU IIC Configuration */
+	/* OLED IIC Configuration */
 	//OLED_IIC_Init();
 	/* MPU6050 Configuration */
 	//OLED_Init();
 	//OLED_Clear();
-	//OLED_ShowString(0,4,"DAYUTC OLED Test",12);
+	//LED_ShowString(0,4,"DAYUTC OLED Test",12);
 }
 
 int main(void)
 {
 	float f = 1.2;
+	s16 temp;
 	volatile int reg = 0;
 	int encoder2 = 0, encoder3 = 0;
 
 	prvSetupHardware();
 
-	//printf("\r\n Hello Wall-e. \r\n");
+	printf("\r\n Hello Wall-e. \r\n");
 
-	MPU6050_Check();
  	while(1)
 	{
 			LED_Test();
 
+			/* IMU Test */
+			//MPU6050_Check();
+			//ReadFromIMU();
+			//temp = MPU_Get_Temperature();
+			//printf("\r\n temp = %d\r\n",temp);
 			/* Find why printf can not use \t */
 			//printtf("\r\nax: %02f \tay: %02f \taz: %02f \t",g_MPU6050Data.accel_x,g_MPU6050Data.accel_y,g_MPU6050Data.accel_z);
-			//printf("\r\nax: %02f \r\nay: %02f \r\naz: %02f \r\n",g_MPU6050Data.accel_x,g_MPU6050Data.accel_y,g_MPU6050Data.accel_z);
-			delay_ms(200);
-			//printf("\r\ngx: %02f \r\ngy: %02f \r\ngz: %02f \r\n",g_MPU6050Data.gyro_x,g_MPU6050Data.gyro_y,g_MPU6050Data.gyro_z);
+			//printf("\r\nax: %d \r\nay: %d \r\naz: %d \r\n",g_MPU6050Data.accel_x,g_MPU6050Data.accel_y,g_MPU6050Data.accel_z);
 			//delay_ms(200);
+			//printf("\r\ngx: %d \r\ngy: %d \r\ngz: %d \r\n",g_MPU6050Data.gyro_x,g_MPU6050Data.gyro_y,g_MPU6050Data.gyro_z);
 
 			/* Encoder Test */
-			printf("\r\nencoder2 = %d , encoder4 = %d\r\n",Read_Encoder(2),Read_Encoder(3));
+			//printf("\r\nencoder2 = %d , encoder4 = %d\r\n",Read_Encoder(2),Read_Encoder(3));
 	}
 }

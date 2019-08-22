@@ -12,11 +12,11 @@
 #define	MPU6050_CONFIG		0x1A	// Low pass filter frequency,Typical value:0x06(5Hz)
 #define	GYRO_CONFIG			0x1B	// Gyro self-test and measurement range,Typical value:0x18(Not self-test,2000deg/s)
 #define	ACCEL_CONFIG		0x1C	// Accelerometer self-test, measurement range and high-pass filter frequency,Typical value:0x00(Not self-test,2g,5Hz)
-#define MPU_FIFO_EN_REG		0X23	
-#define MPU_I2CMST_STA_REG	0X36	
-#define MPU_INTBP_CFG_REG	0X37	
-#define MPU_INT_EN_REG		0X38	
-#define MPU_INT_STA_REG		0X3A	
+#define MPU_FIFO_EN_REG		0X23
+#define MPU_I2CMST_STA_REG	0X36
+#define MPU_INTBP_CFG_REG	0X37
+#define MPU_INT_EN_REG		0X38
+#define MPU_INT_STA_REG		0X3A
 #define	ACCEL_XOUT_H		0x3B
 #define	ACCEL_XOUT_L		0x3C
 #define	ACCEL_YOUT_H		0x3D
@@ -31,7 +31,7 @@
 #define	GYRO_YOUT_L			0x46
 #define	GYRO_ZOUT_H			0x47
 #define	GYRO_ZOUT_L			0x48
-#define MPU_USER_CTRL_REG	0X6A	
+#define MPU_USER_CTRL_REG	0X6A
 #define	PWR_MGMT_1			0x6B	// Power management 1,Typical value:0x00(Normally enabled)
 #define PWR_MGMT_2			0X6C	// Power management 1
 #define WHO_AM_I			0x75	// The default value of the register is 0x68. Bits 0 and 7 are reserved. (Hard coded to 0)
@@ -70,7 +70,7 @@ extern s32 g_Gyro_zoffset;
 
 //-----Operation Func-----//
 static uint8_t MPU6050_getDeviceID(void);
-static uint8_t MPU6050_testConnection(void) 
+static uint8_t MPU6050_testConnection(void); 
 extern void MPU6050_Init(void);							// Initial MPU6050
 extern void MPU6050_WirteByte(u8 reg, u8 data);			// MPU6050 Single write byte
 extern u8 MPU6050_ReadByte(u8 reg);						// MPU6050 Single read byte
