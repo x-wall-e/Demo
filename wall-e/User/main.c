@@ -29,8 +29,8 @@
 		- GND
 
 		// TIM4
-		- PB6 - TIM4_CH1
-		- PB7 - TIM4_CH2
+		- PA6 - TIM3_CH1
+		- PA7 - TIM3_CH2
 		- VCC - 3.3V
 		- GND
 	MOTOR:
@@ -92,8 +92,8 @@ static void prvSetupHardware(void)
 	/* USART3 Re-Configuration */
 	//Uart3_Init(115200);
 	/* Encoder Configuration*/
-	//Encoder_Init_TIM2();
-	//Encoder_Init_TIM4();
+	Encoder_Init_TIM2();
+	Encoder_Init_TIM3();
 	/* Init PWM 10KHZ for motor */
 	//TIM1_PWM_Init(7199,0);
 	/* IMU IIC Configuration */
@@ -108,30 +108,25 @@ int main(void)
 {
 	float f = 1.2;
 	volatile int reg = 0;
-	int encoder2 = 0, encoder4 = 0;
+	int encoder2 = 0, encoder3 = 0;
 
 	prvSetupHardware();
 
 	//printf("\r\n Hello Wall-e. \r\n");
 
+	MPU6050_Check();
  	while(1)
 	{
-			ReadFromIMU();
-			reg = MPU6050_ReadByte(0x6c);
-			//printf("\r\nreg = %02x\r\n",reg);
-
-			//LED_Test();
+			LED_Test();
 
 			/* Find why printf can not use \t */
 			//printtf("\r\nax: %02f \tay: %02f \taz: %02f \t",g_MPU6050Data.accel_x,g_MPU6050Data.accel_y,g_MPU6050Data.accel_z);
 			//printf("\r\nax: %02f \r\nay: %02f \r\naz: %02f \r\n",g_MPU6050Data.accel_x,g_MPU6050Data.accel_y,g_MPU6050Data.accel_z);
-			//delay_ms(200);
+			delay_ms(200);
 			//printf("\r\ngx: %02f \r\ngy: %02f \r\ngz: %02f \r\n",g_MPU6050Data.gyro_x,g_MPU6050Data.gyro_y,g_MPU6050Data.gyro_z);
 			//delay_ms(200);
 
 			/* Encoder Test */
-			//printf("\r\nencoder2 = %d , encoder4 = %d\r\n",-Read_Encoder(2),Read_Encoder(4));
-			//encoder2 = Read_Encoder(2);
-			//printf("\r\n encoder2 = %d\r\n",encoder2);
+			printf("\r\nencoder2 = %d , encoder4 = %d\r\n",Read_Encoder(2),Read_Encoder(3));
 	}
 }
