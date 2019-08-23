@@ -57,40 +57,31 @@ Function：void MPU6050_Init(void)
 Description：Initial MPU6050
 Input:None
 Return:None
-Others:None
+Others:
+	- Gyro and Accelerometer sampling rates is related to the Gyroscope Output Rate and DLPF.
+	- Sample Rate = Gyroscope Output Rate / (1 + SMPLRT_DIV).
+	- Gyroscope Output Rate = 1kHz.
+	- Accelerometer Output Rate = 1kHz.
+	- The larger the bandwidth, the more sensitive, the louder the noise, the larger the output frequency needed, and the larger the sampling rate.
 *************************************/
 
 void MPU6050_Init(void)
 {
-    MPU6050_WirteByte(PWR_MGMT_1, 0x80);
+    MPU6050_WirteByte(PWR_MGMT_1, 0x80);	//0x6B: Resets all internal registers to their default values.The bit automatically clears to 0 once the reset is done.		
     delay_ms(100);
-	/*
-		- Release the sleep state
-		- Enable the temperature sensor
-	*/
-    MPU6050_WirteByte(PWR_MGMT_1, 0x00);
-	/*
-		- Gyro and accelerometer sampling rates
-		- Related to the gyroscope output frequency
-		- Related to DLPF
-		- The larger the bandwidth, the more sensitive, the louder the noise, the larger the output frequency required, and the larger the sampling rate
-	*/
-    MPU6050_WirteByte(SMPLRT_DIV, 0x01);
-	/*
-		- The bandwidth in DLPF is set to a minimum of 5 Hz
-		- Although it is not sensitive, but the noise is small
-	*/
-    MPU6050_WirteByte(MPU6050_CONFIG, 0x06);
-	/*
-		- The range is 500°/s
-		- Sampling frequency: (SMPLRT_DIV + 1) / 1KHz = 500Hz
-		- Gyroscope output frequency: 1KHz
-	*/
-    MPU6050_WirteByte(GYRO_CONFIG, 0x08);
-	/*
-		- The range is +/-4g
-	*/
-    MPU6050_WirteByte(ACCEL_CONFIG, 0x08);
+    MPU6050_WirteByte(PWR_MGMT_1, 0x00);	//0x6B: Release the sleep state and enable the temperature sensor.
+	
+    MPU6050_WirteByte(SMPLRT_DIV, 0x01); 	//0x19: SMPLRT_DIV: 1
+    MPU6050_WirteByte(MPU6050_CONFIG, 0x06);//0x1A: DLPF_CFG[2:0] Bandwidth = 5 HZ. 
+											//		The bandwidth in DLPF is set to a minimum of 5 Hz.
+											//		Although it is not sensitive, but the noise is small.
+											//		Gyroscope Output Rate = 8kHz when the DLPF is disabled (DLPF_CFG = 0 or 7), and 1kHz when the DLPF is enabled.
+											//		+----------------------------------------------------+
+											//		|Sampling frequency: 1KHz / (SMPLRT_DIV + 1) = 500Hz |
+											//		+----------------------------------------------------+
+											
+    MPU6050_WirteByte(GYRO_CONFIG, 0x08);	//0x1B: Range ±500°/s or ±500dps.
+    MPU6050_WirteByte(ACCEL_CONFIG, 0x08);	//0x1C: Range ±4g.
 
 	#if 0
 	MPU6050_WirteByte(PWR_MGMT_1, 0x80); 	//0x6B: Resets all internal registers to their default values.
@@ -98,7 +89,7 @@ void MPU6050_Init(void)
     delay_ms(100);
 
     MPU6050_WirteByte(PWR_MGMT_1, 0x00);	//0x6B: Release the sleep state and enable the temperature sensor.
-	MPU6050_WirteByte(GYRO_CONFIG, 0x08);	//0x1B: ±2000dps
+	MPU6050_WirteByte(GYRO_CONFIG, 0x08);	//0x1B: ±500dps
 	MPU6050_WirteByte(ACCEL_CONFIG, 0x00);	//0x1C: ±2g
 	/* 采样频率大于被采样信号最高频率的两倍 */
 	MPU6050_WirteByte(SMPLRT_DIV, 0x01);	//0x19: Sample Rate Divider: 50Hz
