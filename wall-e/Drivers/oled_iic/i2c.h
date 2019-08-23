@@ -1,13 +1,11 @@
 #ifndef __I2C_H
 #define __I2C_H
 
-#include "stm32f10x_gpio.h"
-#include "stm32f10x_rcc.h"
 #include "stm32f10x.h"
+#include "stm32f10x_gpio.h"
+#include "delay.h"
 
 //-----IIC Direction setting-----//
-//#define SDA_IN()  {GPIOB->CRH&=0XFFF0FFFF;GPIOB->CRH|=8<<16;}	// Can be modified to input mode, both up and down input mode
-//#define SDA_OUT() {GPIOB->CRH&=0XFFF0FFFF;GPIOB->CRH|=3<<16;}	// Can be modified to 50MHZ push-pull output, but faster with registers
 #define SDA_IN()  {GPIOB->CRH&=0XFFFF0FFF;GPIOB->CRH|=8<<12;}	// Can be modified to input mode, both up and down input mode
 #define SDA_OUT() {GPIOB->CRH&=0XFFFF0FFF;GPIOB->CRH|=3<<12;}	// Can be modified to 50MHZ push-pull output, but faster with registers
 
