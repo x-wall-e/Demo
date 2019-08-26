@@ -38,13 +38,17 @@
 		- GND
 
 		//MOTOR-A
-		- In1 - PA8(TIM1-CH1)
+		- PWM1 - PA8(TIM1-CH1)
 		- In2 - GND
 
 		//MOTOR-B
 		- In3 - GND
-		- In4 - PA11(TIM1-CH4)
-
+		- PWM2 - PA11(TIM1-CH4)
+		
+		- AIN1 - PB14
+		- AIN2 - PB15
+		- BIN1 - PB13
+		- BIN2 - PB12
 *********************************************************************************/
 
 #include "delay.h"
