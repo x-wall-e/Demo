@@ -55,23 +55,26 @@ void TIM4_IRQHandler(void)  // 1ms
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 
 		anyCnt++;
-		//loop200HzCnt++;
+		loop200HzCnt++;
 		loop100HzCnt++;
 
 		if(++loop50HzCnt * 50 >= 1000)
 		{
+			printf("\r\nloop50HzCnt\r\n");
 			loop50HzCnt=0;
 			loop50HzFlag=1;
 		}
 
 		if(++loop20HzCnt * 20 >= 1000 )
 		{
+			printf("\r\nloop20HzCnt\r\n");
 			loop20HzCnt=0;
 			loop20HzFlag=1;
 		}
 
 		if(++loop10HzCnt * 10 >= 1000 )
 		{
+			printf("\r\nloop10HzCnt\r\n");
 			loop10HzCnt=0;
 			loop10HzFlag=1;
 		}
