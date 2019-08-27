@@ -14,30 +14,30 @@ Input:
 Return:None
 Others:None
 **********************************************************************************************************/
-void TIM3_Int_Init(u16 arr,u16 psc)
+void TIM4_Int_Init(u16 arr,u16 psc)
 {
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE); 
-	
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
+
 	TIM_DeInit(TIM4);
 
-	TIM_TimeBaseStructure.TIM_Period = arr; /* The period value to be loaded into the active Auto-Reload Register at the next update event */ 	 
+	TIM_TimeBaseStructure.TIM_Period = arr; /* The period value to be loaded into the active Auto-Reload Register at the next update event */
 	TIM_TimeBaseStructure.TIM_Prescaler =psc - 1; //1ms
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0; 
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; 
-	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure); 
- 
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);
+
 	/* Enable or Disable the specific TIM interrupt */
 	TIM_ClearFlag(TIM4,TIM_FLAG_Update);
-	TIM_ITConfig(  
-		TIM3,
+	TIM_ITConfig(
+		TIM4,
 		TIM_IT_Update ,
 		ENABLE
 		);
-		
+
 	/* Enable TIMx */
-	TIM_Cmd(TIM3, ENABLE);  						 
+	TIM_Cmd(TIM4, ENABLE);
 }
 
 /*********************************************************************************************************
@@ -47,13 +47,13 @@ Input:None
 Return:None
 Others:None
 **********************************************************************************************************/
-void TIM3_IRQHandler(void)  // 1ms
+void TIM4_IRQHandler(void)  // 1ms
 {
-	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) 
+	if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET)
 	{
-		//TIM_ClearITPendingBit(TIM4 , TIM_FLAG_Update); 
-		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  
-		
+		//TIM_ClearITPendingBit(TIM4 , TIM_FLAG_Update);
+		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
+
 		anyCnt++;
 		//loop200HzCnt++;
 		loop100HzCnt++;
@@ -63,13 +63,13 @@ void TIM3_IRQHandler(void)  // 1ms
 			loop50HzCnt=0;
 			loop50HzFlag=1;
 		}
-		
+
 		if(++loop20HzCnt * 20 >= 1000 )
 		{
 			loop20HzCnt=0;
 			loop20HzFlag=1;
 		}
-		
+
 		if(++loop10HzCnt * 10 >= 1000 )
 		{
 			loop10HzCnt=0;
@@ -77,5 +77,3 @@ void TIM3_IRQHandler(void)  // 1ms
 		}
 	}
 }
-
-

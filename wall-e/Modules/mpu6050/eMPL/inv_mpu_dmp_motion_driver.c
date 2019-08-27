@@ -23,7 +23,7 @@
 #include "inv_mpu_dmp_motion_driver.h"
 #include "dmpKey.h"
 #include "dmpmap.h"
-#include "usart.h"
+#include "usart1.h"
 #include "delay.h"
 
 //定义目标板采用MSP430
@@ -1380,4 +1380,3 @@ int dmp_register_android_orient_cb(void (*func)(unsigned char))
 /**
  *  @}
  */
-

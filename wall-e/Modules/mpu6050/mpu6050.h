@@ -69,8 +69,6 @@ extern s32 g_Gyro_zoffset;
 
 
 //-----Operation Func-----//
-static uint8_t MPU6050_getDeviceID(void);
-static uint8_t MPU6050_testConnection(void); 
 extern void MPU6050_Init(void);							// Initial MPU6050
 extern void MPU6050_WirteByte(u8 reg, u8 data);			// MPU6050 Single write byte
 extern u8 MPU6050_ReadByte(u8 reg);						// MPU6050 Single read byte
@@ -80,5 +78,7 @@ extern void IMU_Calibration(void);						// MPU6050 calibration
 extern void ReadFromIMU(void);
 extern void MPU6050_Check(void);						//Check MPU6050 found or not
 extern short MPU_Get_Temperature(void);					//Get MPU6050 temperature
+extern u8 MPU_Read_Len(u8 dev, u8 reg, u8 length, u8 *data);
+extern u8 MPU_Write_Len(u8 dev, u8 reg, u8 length, u8* data);
 
 #endif

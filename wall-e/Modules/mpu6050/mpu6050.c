@@ -52,61 +52,43 @@ u8 MPU6050_ReadByte(u8 reg)
     return tmp;
 }
 
-/*************************************
-Function：void MPU6050_Init(void)
-Description：Initial MPU6050
-Input:None
-Return:None
-Others:
-	- Gyro and Accelerometer sampling rates is related to the Gyroscope Output Rate and DLPF.
-	- Sample Rate = Gyroscope Output Rate / (1 + SMPLRT_DIV).
-	- Gyroscope Output Rate = 1kHz.
-	- Accelerometer Output Rate = 1kHz.
-	- The larger the bandwidth, the more sensitive, the louder the noise, the larger the output frequency needed, and the larger the sampling rate.
-*************************************/
 
-void MPU6050_Init(void)
+u8 MPU_Read_Len(u8 dev, u8 reg, u8 length, u8 *data)
 {
-    MPU6050_WirteByte(PWR_MGMT_1, 0x80);	//0x6B: Resets all internal registers to their default values.The bit automatically clears to 0 once the reset is done.		
-    delay_ms(100);
-    MPU6050_WirteByte(PWR_MGMT_1, 0x00);	//0x6B: Release the sleep state and enable the temperature sensor.
-	
-    MPU6050_WirteByte(SMPLRT_DIV, 0x01); 	//0x19: SMPLRT_DIV: 1
-    MPU6050_WirteByte(MPU6050_CONFIG, 0x06);//0x1A: DLPF_CFG[2:0] Bandwidth = 5 HZ. 
-											//		The bandwidth in DLPF is set to a minimum of 5 Hz.
-											//		Although it is not sensitive, but the noise is small.
-											//		Gyroscope Output Rate = 8kHz when the DLPF is disabled (DLPF_CFG = 0 or 7), and 1kHz when the DLPF is enabled.
-											//		+----------------------------------------------------+
-											//		|Sampling frequency: 1KHz / (SMPLRT_DIV + 1) = 500Hz |
-											//		+----------------------------------------------------+
-											
-    MPU6050_WirteByte(GYRO_CONFIG, 0x08);	//0x1B: Range ±500°/s or ±500dps.
-    MPU6050_WirteByte(ACCEL_CONFIG, 0x08);	//0x1C: Range ±4g.
+    u8 count = 0;
+    u8 temp;
+    IIC_Start();
+    IIC_Send_Byte(MPU6050_DEVICE);    //发送写命令
+    IIC_Send_Byte(reg);   //发送地址
+    IIC_Start();
+    IIC_Send_Byte(MPU6050_DEVICE+1);  //进入接收模式
 
-	#if 0
-	MPU6050_WirteByte(PWR_MGMT_1, 0x80); 	//0x6B: Resets all internal registers to their default values.
-											//		The bit automatically clears to 0 once the reset is done.
-    delay_ms(100);
+    for(count=0;count<length;count++){
 
-    MPU6050_WirteByte(PWR_MGMT_1, 0x00);	//0x6B: Release the sleep state and enable the temperature sensor.
-	MPU6050_WirteByte(GYRO_CONFIG, 0x08);	//0x1B: ±500dps
-	MPU6050_WirteByte(ACCEL_CONFIG, 0x00);	//0x1C: ±2g
-	/* 采样频率大于被采样信号最高频率的两倍 */
-	MPU6050_WirteByte(SMPLRT_DIV, 0x01);	//0x19: Sample Rate Divider: 500Hz
-	MPU6050_WirteByte(MPU6050_CONFIG, 0x02);//0x1A: DLPF_CFG[2:0] Accelerometer Bandwidth = 184 Hz, Gyroscope Bandwidth = 188Hz
-	MPU_Write_Byte(MPU_INT_EN_REG,0X00);	//0x38: Disable all interrupt
-	MPU_Write_Byte(MPU_USER_CTRL_REG,0X00);	//0x6A: Disable I2C master mode
-	MPU_Write_Byte(MPU_FIFO_EN_REG,0X00);	//0x23: Disable FIFO
-	MPU_Write_Byte(MPU_INTBP_CFG_REG,0X80);	//0x37: The logic level for the INT pin is active low.
+         if(count!=(length-1))
+            temp = IIC_Read_Byte(1);  //带ACK的读数据
+            else
+            temp = IIC_Read_Byte(0);     //最后一个字节NACK
 
-	if(MPU6050_testConnection())
-	{
-		MPU_Write_Byte(PWR_MGMT_1,0X01);		//0x6B：CLKSEL：PLL with X axis gyroscope reference
-		MPU_Write_Byte(PWR_MGMT_2,0X00);		//0x6C:
-		MPU6050_WirteByte(SMPLRT_DIV, 0x01); 	//0x19: Sample Rate Divider: 50Hz
-		MPU6050_WirteByte(MPU6050_CONFIG, 0x02);//0x1A: DLPF = rate / 2
-	}
-	#endif
+        data[count] = temp;
+    }
+    IIC_Stop();//产生一个停止条件
+    return 0;
+}
+
+u8 MPU_Write_Len(u8 dev, u8 reg, u8 length, u8* data)
+{
+
+    u8 count = 0;
+    IIC_Start();
+    IIC_Send_Byte(MPU6050_DEVICE);    //发送写命令
+    IIC_Send_Byte(reg);   //发送地址
+    for(count=0;count<length;count++){
+        IIC_Send_Byte(data[count]);
+     }
+    IIC_Stop();//产生一个停止条件
+
+    return 0; //status == 0;
 }
 
 /**********************************************************************
@@ -168,6 +150,65 @@ void MPU6050_Check(void)
 		    break;
   }
 }
+
+/*************************************
+Function：void MPU6050_Init(void)
+Description：Initial MPU6050
+Input:None
+Return:None
+Others:
+	- Gyro and Accelerometer sampling rates is related to the Gyroscope Output Rate and DLPF.
+	- Sample Rate = Gyroscope Output Rate / (1 + SMPLRT_DIV).
+	- Gyroscope Output Rate = 1kHz.
+	- Accelerometer Output Rate = 1kHz.
+	- The larger the bandwidth, the more sensitive, the louder the noise, the larger the output frequency needed, and the larger the sampling rate.
+*************************************/
+
+void MPU6050_Init(void)
+{
+    #if 0
+    MPU6050_WirteByte(PWR_MGMT_1, 0x80);	//0x6B: Resets all internal registers to their default values.The bit automatically clears to 0 once the reset is done.
+    delay_ms(100);
+    MPU6050_WirteByte(PWR_MGMT_1, 0x00);	//0x6B: Release the sleep state and enable the temperature sensor.
+
+    MPU6050_WirteByte(SMPLRT_DIV, 0x01); 	//0x19: SMPLRT_DIV: 1
+    MPU6050_WirteByte(MPU6050_CONFIG, 0x06);//0x1A: DLPF_CFG[2:0] Bandwidth = 5 HZ.
+											//		The bandwidth in DLPF is set to a minimum of 5 Hz.
+											//		Although it is not sensitive, but the noise is small.
+											//		Gyroscope Output Rate = 8kHz when the DLPF is disabled (DLPF_CFG = 0 or 7), and 1kHz when the DLPF is enabled.
+											//		+----------------------------------------------------+
+											//		|Sampling frequency: 1KHz / (SMPLRT_DIV + 1) = 500Hz |
+											//		+----------------------------------------------------+
+
+    MPU6050_WirteByte(GYRO_CONFIG, 0x08);	//0x1B: Range ±500°/s or ±500dps.
+    MPU6050_WirteByte(ACCEL_CONFIG, 0x08);	//0x1C: Range ±4g.
+    #endif
+	#if 1
+	MPU6050_WirteByte(PWR_MGMT_1, 0x80); 	//0x6B: Resets all internal registers to their default values.
+											//		The bit automatically clears to 0 once the reset is done.
+    delay_ms(100);
+
+    MPU6050_WirteByte(PWR_MGMT_1, 0x00);	//0x6B: Release the sleep state and enable the temperature sensor.
+	MPU6050_WirteByte(GYRO_CONFIG, 0x08);	//0x1B: ±500dps
+	MPU6050_WirteByte(ACCEL_CONFIG, 0x00);	//0x1C: ±2g
+	/* 采样频率大于被采样信号最高频率的两倍 */
+	MPU6050_WirteByte(SMPLRT_DIV, 0x01);	//0x19: Sample Rate Divider: 500Hz
+	MPU6050_WirteByte(MPU6050_CONFIG, 0x02);//0x1A: DLPF_CFG[2:0] Accelerometer Bandwidth = 184 Hz, Gyroscope Bandwidth = 188Hz
+	MPU6050_WirteByte(MPU_INT_EN_REG,0X00);	//0x38: Disable all interrupt
+	MPU6050_WirteByte(MPU_USER_CTRL_REG,0X00);	//0x6A: Disable I2C master mode
+	MPU6050_WirteByte(MPU_FIFO_EN_REG,0X00);	//0x23: Disable FIFO
+	MPU6050_WirteByte(MPU_INTBP_CFG_REG,0X80);	//0x37: The logic level for the INT pin is active low.
+
+	if(MPU6050_testConnection())
+	{
+		MPU6050_WirteByte(PWR_MGMT_1,0X01);		//0x6B：CLKSEL：PLL with X axis gyroscope reference
+		MPU6050_WirteByte(PWR_MGMT_2,0X00);		//0x6C:
+		MPU6050_WirteByte(SMPLRT_DIV, 0x01); 	//0x19: Sample Rate Divider: 50Hz
+		MPU6050_WirteByte(MPU6050_CONFIG, 0x02);//0x1A: DLPF = rate / 2
+	}
+	#endif
+}
+
 
 /*********************************************
 Function：short MPU_Get_Temperature(void)
