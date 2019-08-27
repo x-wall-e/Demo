@@ -1,6 +1,8 @@
 PROJECT := demo
 
 DIR_DRIVERS   += ../Drivers/delay/
+DIR_DRIVERS   += ../Drivers/timer/
+DIR_DRIVERS   += ../Drivers/nvic/
 DIR_DRIVERS   += ../Drivers/debug_usart1/
 DIR_DRIVERS   += ../Drivers/bluetooth_usart3/
 DIR_DRIVERS   += ../Drivers/imu_iic/
@@ -13,7 +15,7 @@ DIR_MODULES   += ../Modules/bluetooth/
 DIR_MODULES   += ../Modules/encoder/
 DIR_MODULES   += ../Modules/oled/
 
-DIR_ALGORITHM += ../Algorithm/control/
+#DIR_ALGORITHM += ../Algorithm/control/
 
 DIR_INCLUDE   += -I../Libraries/CMSIS/ \
                  -I../Libraries/FWLib/inc/ \
