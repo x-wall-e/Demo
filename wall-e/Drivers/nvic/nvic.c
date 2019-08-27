@@ -28,12 +28,12 @@ void NVIC_Configuration(void)
 	/* Use NVIC interrupt Group 2: 2-bit preemption priority, 2-bit response priority */
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	
 
-	//////////////////定时器3的中断优先级配置//////////////////		
-	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;  //TIM3中断
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x01;  //先占优先级1级
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x01;  //从优先级3级
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; //IRQ通道被使能
-	NVIC_Init(&NVIC_InitStructure);  //根据NVIC_InitStruct中指定的参数初始化外设NVIC寄存器
+	/* Timer 3 NVIC interrupt priority configuration (Main loop reference timer)*/		
+	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;  
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x01; /* Preemption priority: 1 */
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x01;  		 /* Response priority: 1 */
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; 			 /* IRQ channel enable */
+	NVIC_Init(&NVIC_InitStructure);  
 
 	/* Usart3 NVIC interrupt priority configuration (Bluetooth serial port configuration) */
 	NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;

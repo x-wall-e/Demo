@@ -37,26 +37,26 @@
 		- VCC - 5V
 		- GND
 
-		//MOTOR-A
-		- PWM1 - PA8(TIM1-CH1)
-		- In2 - GND
-
-		//MOTOR-B
-		- In3 - GND
-		- PWM2 - PA11(TIM1-CH4)
-		
+		//MOTOR-A		
 		- AIN1 - PB14
 		- AIN2 - PB15
+		- PWMA - PA8(TIM1-CH1)
+		- GND - GND
+
+		//MOTOR-B
 		- BIN1 - PB13
 		- BIN2 - PB12
+		- PWMB - PA11(TIM1-CH4)
+		- GND - GND
 *********************************************************************************/
 
 #include "delay.h"
+#include "timer.h"
 #include "led.h"
 #include "iic.h"
 #include "usart1.h"
 #include "mpu6050.h"
-//#include "nvic.h"
+#include "nvic.h"
 #include "encoder.h"
 //#include "usart3.h"
 //#include "bluetooth.h"
@@ -64,33 +64,44 @@
 //#include "oled.h"
 #include <stdio.h>
 
-/****************************Global Variable*************************************/
+/**********************************Global Variable***********************************************************/
 /* Bluetooth remote control related variables */
 int 	Flag_Forward,Flag_Backward,Flag_Left,Flag_Right;
 
 /*IMUֱ direct sampled data structure */
 struct MPU6050_tag g_MPU6050Data;
-/********************************************************************************/
 
+float pitch = 0.0,roll = 0.0,yaw = 0.0;
+
+/* Control frequency */
+extern volatile uint16_t anyCnt,anyCnt2;
+extern uint8_t  loop500HzFlag,loop200HzFlag,loop50HzFlag,loop600HzFlag,loop100HzFlag,loop20HzFlag,loop10HzFlag;
+/*************************************************************************************************************/
 
 /* Hardward Initial */
 static void prvSetupHardware(void)
 {
+	/* SystemClock Configuration, Clock source uses external crystal oscillator(HSEs), 8*9 = 72MHz */
+	SystemClock_HSE(9);           
 	/* LED Configuration */
 	LED_Configuration();
 	/* Systick Configuration */
 	delay_init();
-	delay_ms(5000);
+	delay_ms(2000);
+	/* Timer3 Configuration */
+	//TIM3_Int_Init(SysClock,1000);
 	/* IMU IIC Configuration */
 	MPU6050_IIC_Init();
 	/* MPU6050 Configuration */
 	MPU6050_Init();
+	/* MPU6050 DMP Configuration */
+	mpu_dmp_init();	
 	/* USART1 Configuration */
 	Uart1_Init();
 	/* USART3 Configuration */
 	//Uart3_Init(9600);
 	/* NVIC Configuration */
-	//NVIC_Configuration();
+	NVIC_Configuration();
 	/* Bluetooth Power On */
 	//BT_PowerInit();
 	/* USART3 Re-Configuration */
@@ -121,20 +132,29 @@ int main(void)
 
  	while(1)
 	{
-			LED_Test();
+		LED_Test();
+		
+		//100Hz Loop
+        if(loop100HzCnt>=10)
+        {
+            loop100HzCnt=0;
+			//mpu_dmp_get_data(&pitch, &roll, &yaw);//得到欧拉角（姿态角）的数据
+        }
+		/* DMP Test */
+		//mpu_dmp_get_data(&pitch, &roll, &yaw);
+		//printf("\r\n pitch = %f, roll = %f, yaw = %f\r\n",pitch, roll, yaw);
+		/* IMU Test */
+		//MPU6050_Check();
+		//ReadFromIMU();
+		//temp = MPU_Get_Temperature();
+		//printf("\r\n temp = %d\r\n",temp);
+		/* Find why printf can not use \t */
+		//printtf("\r\nax: %02f \tay: %02f \taz: %02f \t",g_MPU6050Data.accel_x,g_MPU6050Data.accel_y,g_MPU6050Data.accel_z);
+		//printf("\r\nax: %d \r\nay: %d \r\naz: %d \r\n",g_MPU6050Data.accel_x,g_MPU6050Data.accel_y,g_MPU6050Data.accel_z);
+		//delay_ms(200);
+		//printf("\r\ngx: %d \r\ngy: %d \r\ngz: %d \r\n",g_MPU6050Data.gyro_x,g_MPU6050Data.gyro_y,g_MPU6050Data.gyro_z);
 
-			/* IMU Test */
-			//MPU6050_Check();
-			//ReadFromIMU();
-			//temp = MPU_Get_Temperature();
-			//printf("\r\n temp = %d\r\n",temp);
-			/* Find why printf can not use \t */
-			//printtf("\r\nax: %02f \tay: %02f \taz: %02f \t",g_MPU6050Data.accel_x,g_MPU6050Data.accel_y,g_MPU6050Data.accel_z);
-			//printf("\r\nax: %d \r\nay: %d \r\naz: %d \r\n",g_MPU6050Data.accel_x,g_MPU6050Data.accel_y,g_MPU6050Data.accel_z);
-			//delay_ms(200);
-			//printf("\r\ngx: %d \r\ngy: %d \r\ngz: %d \r\n",g_MPU6050Data.gyro_x,g_MPU6050Data.gyro_y,g_MPU6050Data.gyro_z);
-
-			/* Encoder Test */
-			//printf("\r\nencoder2 = %d , encoder4 = %d\r\n",Read_Encoder(2),Read_Encoder(3));
+		/* Encoder Test */
+		//printf("\r\nencoder2 = %d , encoder4 = %d\r\n",Read_Encoder(2),Read_Encoder(3));
 	}
 }

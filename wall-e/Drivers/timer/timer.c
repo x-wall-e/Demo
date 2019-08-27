@@ -1,38 +1,81 @@
 #include "timer.h"
+#include <stdio.h>
 
-//通用定时器中断初始化
-//这里时钟选择为APB1的2倍，而APB1为36M
-//arr：自动重装值。
-//psc：时钟预分频数
-//这里使用的是定时器3
+volatile uint16_t anyCnt=0,anyCnt2=0;
+uint8_t  loop500HzFlag,loop200HzFlag,loop50HzFlag,loop600HzFlag,loop100HzFlag,loop20HzFlag,loop10HzFlag;
+volatile uint16_t loop500Hzcnt,loop200HzCnt,loop50HzCnt , loop600HzCnt,loop100HzCnt, loop20HzCnt , loop10HzCnt=0;
+
+/********************************************************************************************************
+Function:void TIM3_Int_Init(u16 arr,u16 psc)
+Description: Timer3 Init
+Input:
+	u16 arr: automatic reload value
+	u16 psc：clock prescaler
+Return:None
+Others:None
+**********************************************************************************************************/
 void TIM3_Int_Init(u16 arr,u16 psc)
 {
-  TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
+	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE); //时钟使能
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE); 
+	
+	TIM_DeInit(TIM4);
 
-	TIM_TimeBaseStructure.TIM_Period = arr; //设置在下一个更新事件装入活动的自动重装载寄存器周期的值	 计数到5000为500ms
-	TIM_TimeBaseStructure.TIM_Prescaler =psc; //设置用来作为TIMx时钟频率除数的预分频值  10Khz的计数频率  
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0; //设置时钟分割:TDTS = Tck_tim
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //TIM向上计数模式
-	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure); //根据TIM_TimeBaseInitStruct中指定的参数初始化TIMx的时间基数单位
+	TIM_TimeBaseStructure.TIM_Period = arr; /* The period value to be loaded into the active Auto-Reload Register at the next update event */ 	 
+	TIM_TimeBaseStructure.TIM_Prescaler =psc - 1; //1ms
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0; 
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; 
+	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure); 
  
-	TIM_ITConfig(  //使能或者失能指定的TIM中断
-		TIM3, //TIM3
+	/* Enable or Disable the specific TIM interrupt */
+	TIM_ClearFlag(TIM4,TIM_FLAG_Update);
+	TIM_ITConfig(  
+		TIM3,
 		TIM_IT_Update ,
-		ENABLE  //使能
+		ENABLE
 		);
-	TIM_Cmd(TIM3, ENABLE);  //使能TIMx外设
-							 
+		
+	/* Enable TIMx */
+	TIM_Cmd(TIM3, ENABLE);  						 
 }
-void TIM3_IRQHandler(void)   //TIM3中断
+
+/*********************************************************************************************************
+Function:void TIM3_IRQHandler(void)
+Description: TIM3 IRQHandler
+Input:None
+Return:None
+Others:None
+**********************************************************************************************************/
+void TIM3_IRQHandler(void)  // 1ms
 {
-	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) //检查指定的TIM中断发生与否:TIM 中断源 
+	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) 
+	{
+		//TIM_ClearITPendingBit(TIM4 , TIM_FLAG_Update); 
+		TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  
+		
+		anyCnt++;
+		//loop200HzCnt++;
+		loop100HzCnt++;
+
+		if(++loop50HzCnt * 50 >= 1000)
 		{
-			TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  //清除TIMx的中断待处理位:TIM 中断源.
-			Encoder_Right = -Read_Encoder(2); 
-			Encoder_Left  = Read_Encoder(4);
+			loop50HzCnt=0;
+			loop50HzFlag=1;
 		}
+		
+		if(++loop20HzCnt * 20 >= 1000 )
+		{
+			loop20HzCnt=0;
+			loop20HzFlag=1;
+		}
+		
+		if(++loop10HzCnt * 10 >= 1000 )
+		{
+			loop10HzCnt=0;
+			loop10HzFlag=1;
+		}
+	}
 }
 
 
