@@ -31,4 +31,10 @@
 #define BIN1   PBout(13)
 #define BIN2   PBout(12)
 
+void Motor_Init(void);
+int myabs(int a);
+void Set_Pwm(int moto1,int moto2);
+void Xianfu_Pwm(void);
+void Turn_Off(float angle, float voltage);
+
 #endif

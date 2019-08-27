@@ -58,6 +58,7 @@
 #include "mpu6050.h"
 #include "nvic.h"
 #include "encoder.h"
+#include "control.h"
 //#include "usart3.h"
 //#include "bluetooth.h"
 //#include "pwm.h"
@@ -111,6 +112,10 @@ static void prvSetupHardware(void)
 	Encoder_Init_TIM3();
 	/* Init PWM 10KHZ for motor */
 	//TIM1_PWM_Init(7199,0);
+	//delay_ms(1000);
+	//delay_ms(1000);
+	/* Motor io Configuration */
+	//Motor_Init();	
 	/* OLED IIC Configuration */
 	//OLED_IIC_Init();
 	/* MPU6050 Configuration */

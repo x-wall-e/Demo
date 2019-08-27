@@ -62,3 +62,24 @@ void Set_Pwm(int moto1,int moto2)
 	else        BIN1=1,			BIN2=0;
 	PWMB=myabs(moto2);	
 }
+
+void Xianfu_Pwm(void)
+{
+	//PWM满幅是7200 限制在7000
+	if(Moto1<-7000 ) Moto1=-7000 ;
+	if(Moto1>7000 )  Moto1=7000 ;
+	if(Moto2<-7000 ) Moto2=-7000 ;
+	if(Moto2>7000 )  Moto2=7000 ;
+}
+
+void Turn_Off(float angle, float voltage)
+{
+		if(angle < -40 || angle > 40)	 //倾角大于40度关闭电机
+		{	                                  																		 
+				Moto1=0;
+				Moto2=0;
+				flag_fall=1;
+		}		
+		else 				
+				flag_fall=0;
+}
