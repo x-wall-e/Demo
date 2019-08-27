@@ -144,7 +144,18 @@ int main(void)
         {
             loop100HzCnt=0;
 			//mpu_dmp_get_data(&pitch, &roll, &yaw);//得到欧拉角（姿态角）的数据
+			//ReadFromIMU();
+			//Encoder_Left=-Read_Encoder(2);
+			//Encoder_Right=Read_Encoder(4); 
+			//Balance_Pwm =balance_UP(pitch,Mechanical_angle,gyroy);   //平衡环PID控制
+			//Velocity_Pwm=velocity(Encoder_Left,Encoder_Right);       //速度环PID控制	
+			//Moto1=Balance_Pwm-Velocity_Pwm-Turn_Pwm;                 //计算左轮电机最终PWM
+			//Moto2=Balance_Pwm-Velocity_Pwm+Turn_Pwm;                 //计算右轮电机最终PWM
+			//Xianfu_Pwm();  										   //PWM限幅
+			//Turn_Off(pitch);								   		   //检查角度以及电压是否正常
+			//Set_Pwm(Moto1,Moto2);                                    //赋值给PWM寄存器  			
         }
+		
 		/* DMP Test */
 		//mpu_dmp_get_data(&pitch, &roll, &yaw);
 		//printf("\r\n pitch = %f, roll = %f, yaw = %f\r\n",pitch, roll, yaw);

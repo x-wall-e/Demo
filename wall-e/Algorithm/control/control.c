@@ -1,5 +1,15 @@
 #include "control.h"
 
+int Balance_Pwm,Velocity_Pwm,Turn_Pwm;
+
+float Mechanical_angle=-6; 	//机械中值。
+
+float balance_UP_KP=280; 	//直立环KP
+float balance_UP_KD=0.8;
+
+float velocity_KP=90;
+float velocity_KI=0.45;
+
 //直立PD控制
 //角度、机械平衡角度（机械中值）、角速度
 int Balance_UP(float Angle,float Mechanical_balance,float Gyro)

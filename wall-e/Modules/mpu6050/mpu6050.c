@@ -92,8 +92,8 @@ void MPU6050_Init(void)
 	MPU6050_WirteByte(GYRO_CONFIG, 0x08);	//0x1B: ±500dps
 	MPU6050_WirteByte(ACCEL_CONFIG, 0x00);	//0x1C: ±2g
 	/* 采样频率大于被采样信号最高频率的两倍 */
-	MPU6050_WirteByte(SMPLRT_DIV, 0x01);	//0x19: Sample Rate Divider: 50Hz
-	MPU6050_WirteByte(MPU6050_CONFIG, 0x02);//0x1A: DLPF = rate / 2
+	MPU6050_WirteByte(SMPLRT_DIV, 0x01);	//0x19: Sample Rate Divider: 500Hz
+	MPU6050_WirteByte(MPU6050_CONFIG, 0x02);//0x1A: DLPF_CFG[2:0] Accelerometer Bandwidth = 184 Hz, Gyroscope Bandwidth = 188Hz
 	MPU_Write_Byte(MPU_INT_EN_REG,0X00);	//0x38: Disable all interrupt
 	MPU_Write_Byte(MPU_USER_CTRL_REG,0X00);	//0x6A: Disable I2C master mode
 	MPU_Write_Byte(MPU_FIFO_EN_REG,0X00);	//0x23: Disable FIFO

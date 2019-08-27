@@ -72,7 +72,7 @@ void Xianfu_Pwm(void)
 	if(Moto2>7000 )  Moto2=7000 ;
 }
 
-void Turn_Off(float angle, float voltage)
+void Turn_Off(float angle)
 {
 		if(angle < -40 || angle > 40)	 //倾角大于40度关闭电机
 		{	                                  																		 
