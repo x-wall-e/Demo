@@ -90,6 +90,8 @@ extern volatile uint16_t loop500Hzcnt,loop200HzCnt,loop50HzCnt , loop600HzCnt,lo
 extern int Balance_Pwm,Velocity_Pwm,Turn_Pwm;
 
 extern float Mechanical_angle;
+
+extern SysClock;
 /*************************************************************************************************************/
 
 /* Hardward Initial */
@@ -97,14 +99,14 @@ static void prvSetupHardware(void)
 {
 	u8 ret = 0;
 	/* SystemClock Configuration, Clock source uses external crystal oscillator(HSEs), 8*9 = 72MHz */
-	//SystemClock_HSE(9);
+	SystemClock_HSE(9);
 	/* LED Configuration */
 	LED_Configuration();
 	/* Systick Configuration */
 	delay_init();
 	delay_ms(2000);
 	/* Timer4 Configuration */
-	TIM4_Int_Init(SystemCoreClock,1000);
+	TIM4_Int_Init(999,SysClock);
 	/* IMU IIC Configuration */
 	MPU6050_IIC_Init();
 	/* MPU6050 Configuration */

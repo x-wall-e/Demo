@@ -8,9 +8,8 @@ Input:
 	u16 psc：clock prescaler
 Return:None
 Others:
-	TIM1_PWM_Init(7199,0);
-		- PWM frequency:
-			72000Mhz / (7199+1) = 10Khz
+	PWM frequency = 72M / ((arr+1)*(psc+1))(Hz)
+	Duty Circle = TIMx->CCR1 / TIM_Period (%)
 *********************************************/
 void TIM1_PWM_Init(u16 arr,u16 psc)
 {  
@@ -32,9 +31,11 @@ void TIM1_PWM_Init(u16 arr,u16 psc)
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 	
-	
+	/**********************************+
+	| 72000MHz / (7199+1)(0+1) = 10KHz |			
+	+**********************************/	
 	TIM_TimeBaseStructure.TIM_Period = arr; /* The period value to be loaded into the active Auto-Reload Register at the next update event */ 
-	TIM_TimeBaseStructure.TIM_Prescaler =psc; /*The prescaler value used to divide the TIM clock: 0 - No frequency division */
+	TIM_TimeBaseStructure.TIM_Prescaler = psc; /*The prescaler value used to divide the TIM clock: 0 - No frequency division */
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0; /* Set clock division: TDTS = Tck_tim */
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; /* Count up mode */
 	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
