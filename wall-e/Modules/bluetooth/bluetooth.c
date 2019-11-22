@@ -54,6 +54,7 @@ Input:None
 Return:None
 Others:None
 ***************************************************************************/
+#if 0
 void BT_PowerInit(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
@@ -67,3 +68,4 @@ void BT_PowerInit(void)
 
   BT_on();
 }
+#endif

@@ -10,74 +10,74 @@ Others:None
 *********************************************/
 void Encoder_Init_TIM2(void)
 {
-	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-	TIM_ICInitTypeDef TIM_ICInitStructure;
-	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);/* Enable Tim2 clock */
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);/* Enable GPIOA clock */
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+    TIM_ICInitTypeDef TIM_ICInitStructure;
+    GPIO_InitTypeDef GPIO_InitStructure;
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);/* Enable Tim2 clock */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);/* Enable GPIOA clock */
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1;  /* Port configuration */
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; /* GPIO_Mode_IN_FLOATING */
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
+    GPIO_InitStructure.GPIO_Pin = ENCODERA_PIN_1|ENCODERA_PIN_2;  /* Port configuration */
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; /* GPIO_Mode_IN_FLOATING */
+    GPIO_Init(ENCODERA_PORT, &GPIO_InitStructure);
 
-	TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-	TIM_TimeBaseStructure.TIM_Prescaler = 0x0; /* Prescaler */
-	TIM_TimeBaseStructure.TIM_Period = ENCODER_TIM_PERIOD; /* Set counter automatic reload value */
-	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;/* Select clock division: no division */
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;/* Time Count up mode*/
-	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+    TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
+    TIM_TimeBaseStructure.TIM_Prescaler = 0x0; /* Prescaler */
+    TIM_TimeBaseStructure.TIM_Period = ENCODER_TIM_PERIOD; /* Set counter automatic reload value */
+    TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;/* Select clock division: no division */
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;/* Time Count up mode*/
+    TIM_TimeBaseInit(ENCODERA_TIMER, &TIM_TimeBaseStructure);
 
-	TIM_EncoderInterfaceConfig(TIM2, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);/* Use encoder mode: 3 */
+    TIM_EncoderInterfaceConfig(ENCODERA_TIMER, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);/* Use encoder mode: 3 */
 
-	TIM_ICStructInit(&TIM_ICInitStructure);
-	TIM_ICInitStructure.TIM_ICFilter = 10;
-	TIM_ICInit(TIM2, &TIM_ICInitStructure);
-	TIM_ClearFlag(TIM2, TIM_FLAG_Update);/* Clear the TIM update flag */
-	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+    TIM_ICStructInit(&TIM_ICInitStructure);
+    TIM_ICInitStructure.TIM_ICFilter = 10;
+    TIM_ICInit(ENCODERA_TIMER, &TIM_ICInitStructure);
+    TIM_ClearFlag(ENCODERA_TIMER, TIM_FLAG_Update);/* Clear the TIM update flag */
+    TIM_ITConfig(ENCODERA_TIMER, TIM_IT_Update, ENABLE);
 
-	/* Reset counter */
-	TIM_SetCounter(TIM2,0);
-	TIM_Cmd(TIM2, ENABLE);
+    /* Reset counter */
+    TIM_SetCounter(ENCODERA_TIMER,0);
+    TIM_Cmd(ENCODERA_TIMER, ENABLE);
 }
 
 /********************************************
-Function:void Encoder_Init_TIM3(void)
+Function:void Encoder_Init_TIM4(void)
 Description: Initialize TIM4 to encoder mode
 Input:None
 Return:None
 Others:None
 *********************************************/
-void Encoder_Init_TIM3(void)
+void Encoder_Init_TIM4(void)
 {
-	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-  TIM_ICInitTypeDef TIM_ICInitStructure;
-  GPIO_InitTypeDef GPIO_InitStructure;
+    TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+    TIM_ICInitTypeDef TIM_ICInitStructure;
+    GPIO_InitTypeDef GPIO_InitStructure;
 
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);/* Enable Tim3 clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);/* Enable GPIOA clock */
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);/* Enable Tim4 clock */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);/* Enable GPIOA clock */
 
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6|GPIO_Pin_7;	/* Port configuration */
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;  /* GPIO_Mode_IN_FLOATING */
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
+    GPIO_InitStructure.GPIO_Pin = ENCODERB_PIN_1|ENCODERB_PIN_2;	/* Port configuration */
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;  /* GPIO_Mode_IN_FLOATING */
+    GPIO_Init(ENCODERB_PORT, &GPIO_InitStructure);
 
-  TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-  TIM_TimeBaseStructure.TIM_Prescaler = 0x0; /* Prescaler */
-  TIM_TimeBaseStructure.TIM_Period = ENCODER_TIM_PERIOD; /* Set counter automatic reload value */
-  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;/* Select clock division: no division */
-  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;/* Time Count up mode*/
-  TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
+    TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
+    TIM_TimeBaseStructure.TIM_Prescaler = 0x0; /* Prescaler */
+    TIM_TimeBaseStructure.TIM_Period = ENCODER_TIM_PERIOD; /* Set counter automatic reload value */
+    TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;/* Select clock division: no division */
+    TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;/* Time Count up mode*/
+    TIM_TimeBaseInit(ENCODERB_TIMER, &TIM_TimeBaseStructure);
 
-  TIM_EncoderInterfaceConfig(TIM3, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);/* Use encoder mode: 3 */
+    TIM_EncoderInterfaceConfig(ENCODERB_TIMER, TIM_EncoderMode_TI12, TIM_ICPolarity_Rising, TIM_ICPolarity_Rising);/* Use encoder mode: 3 */
 
-	TIM_ICStructInit(&TIM_ICInitStructure);
-  TIM_ICInitStructure.TIM_ICFilter = 10;
-  TIM_ICInit(TIM3, &TIM_ICInitStructure);
-  TIM_ClearFlag(TIM3, TIM_FLAG_Update);/* Clear the TIM update flag */
-  TIM_ITConfig(TIM3, TIM_IT_Update, ENABLE);
+    TIM_ICStructInit(&TIM_ICInitStructure);
+    TIM_ICInitStructure.TIM_ICFilter = 10;
+    TIM_ICInit(ENCODERB_TIMER, &TIM_ICInitStructure);
+    TIM_ClearFlag(ENCODERB_TIMER, TIM_FLAG_Update);/* Clear the TIM update flag */
+    TIM_ITConfig(ENCODERB_TIMER, TIM_IT_Update, ENABLE);
 
-  /* Reset counter */
-  TIM_SetCounter(TIM3,0);
-  TIM_Cmd(TIM3, ENABLE);
+    /* Reset counter */
+    TIM_SetCounter(ENCODERB_TIMER,0);
+    TIM_Cmd(ENCODERB_TIMER, ENABLE);
 }
 
 /********************************************
@@ -91,31 +91,31 @@ Others:None
 *********************************************/
 int Read_Encoder(u8 TIMX)
 {
-	int Encoder_TIM;
-	switch(TIMX)
-	{
-		case 2:  Encoder_TIM= (short)TIM2 -> CNT;  TIM2 -> CNT=0;break;
-		case 3:  Encoder_TIM= (short)TIM3 -> CNT;  TIM3 -> CNT=0;break;
-		case 4:  Encoder_TIM= (short)TIM4 -> CNT;  TIM4 -> CNT=0;break;
-		default: Encoder_TIM=0;
-	}
+    int Encoder_TIM;
+    switch(TIMX)
+    {
+    	case 2:  Encoder_TIM= (short)TIM2 -> CNT;  TIM2 -> CNT=0;break;
+    	case 3:  Encoder_TIM= (short)TIM3 -> CNT;  TIM3 -> CNT=0;break;
+    	case 4:  Encoder_TIM= (short)TIM4 -> CNT;  TIM4 -> CNT=0;break;
+    	default: Encoder_TIM=0;
+    }
 
-	return Encoder_TIM;
+    return Encoder_TIM;
 }
 
 /********************************************
-Function:void TIM3_IRQHandler(void)
-Description: TIM3 interrupt handle function
+Function:void TIM4_IRQHandler(void)
+Description: TIM4 interrupt handle function
 Input:None
 Return:None
 Others:None
 *********************************************/
-void TIM3_IRQHandler(void)
+void TIM4IRQHandler(void)
 {
-	if(TIM3->SR & 0X0001)/* Overflow interrupt */
-	{
-	}
-	TIM3->SR &= ~(1<<0);/* Clear interrupt flag */
+    if(TIM4->SR & 0X0001)/* Overflow interrupt */
+    {
+    }
+    TIM4->SR &= ~(1<<0);/* Clear interrupt flag */
 }
 
 /********************************************
@@ -127,8 +127,8 @@ Others:None
 *********************************************/
 void TIM2_IRQHandler(void)
 {
-	if(TIM2->SR & 0X0001)/* Overflow interrupt */
-	{
-	}
-	TIM2->SR &= ~(1<<0);/* Clear interrupt flag */
+    if(TIM2->SR & 0X0001)/* Overflow interrupt */
+    {
+    }
+    TIM2->SR &= ~(1<<0);/* Clear interrupt flag */
 }

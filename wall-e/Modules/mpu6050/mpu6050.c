@@ -110,7 +110,7 @@ static uint8_t MPU6050_getDeviceID(void)
     IIC_Send_Byte(MPU6050_DEVICE + 1);          // Transmit device address + read signal
     id = IIC_Read_Byte(0);                      // Reading data and generate nACK
     IIC_Stop();
-
+    //printf("id = %02x\r\n",id);
     return id;
 }
 
@@ -143,10 +143,10 @@ void MPU6050_Check(void)
   switch(MPU6050_testConnection())
   {
     case 0:
-		    printf("MPU6050 not found...\r\n");
+		    RTT_printf(0,"MPU6050 not found...\r\n");
 		    break;
     case 1:
-		    printf("MPU6050 check success...\r\n");
+		    RTT_printf(0,"MPU6050 check success...\r\n");
 		    break;
   }
 }

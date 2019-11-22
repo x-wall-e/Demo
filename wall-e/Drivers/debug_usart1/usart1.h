@@ -5,8 +5,6 @@
 #include "stm32f10x.h"
 #include "stm32f10x_usart.h"
 
-#define USART_REC_LEN  			55*1024 //定义最大接收字节数 55K
-
 //-----USART变量-----//
 #define BAUD 115200
 

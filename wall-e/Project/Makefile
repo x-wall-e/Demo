@@ -1,5 +1,6 @@
 PROJECT := demo
 
+DIR_DRIVERS   += ../Drivers/sys/
 DIR_DRIVERS   += ../Drivers/delay/
 DIR_DRIVERS   += ../Drivers/timer/
 DIR_DRIVERS   += ../Drivers/pwm/
@@ -16,6 +17,7 @@ DIR_MODULES   += ../Modules/bluetooth/
 DIR_MODULES   += ../Modules/encoder/
 DIR_MODULES   += ../Modules/oled/
 DIR_MODULES   += ../Modules/motor/
+DIR_MODULES   += ../Modules/segger/
 
 DIR_ALGORITHM += ../Algorithm/control/
 

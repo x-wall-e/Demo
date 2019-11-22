@@ -5,6 +5,9 @@
 #include "stm32f10x_rcc.h"
 #include "delay.h"
 
+#define LED1_PIN GPIO_Pin_14
+#define LED1_PORT GPIOC
+
 void LED_Configuration(void);
 void LED_Off(void);
 void LED_ON(void);

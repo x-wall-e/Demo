@@ -30,10 +30,10 @@
 #define PBin(n)    BIT_ADDR(GPIOB_IDR_Addr,n)  //Input
 
 #define PWMA   TIM1->CCR1  //PA8
-#define AIN2   PBout(15)
-#define AIN1   PBout(14)
-#define BIN1   PBout(13)
-#define BIN2   PBout(12)
+#define AIN2   PBout(12)
+#define AIN1   PBout(13)
+#define BIN1   PBout(14)
+#define BIN2   PBout(15)
 #define PWMB   TIM1->CCR4  //PA11
 
 void Motor_Init(void);

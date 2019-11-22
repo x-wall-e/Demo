@@ -32,7 +32,7 @@ void Uart3_Init(u32 bound)
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
 
 	//USART Configuration
-	USART_InitStructure.USART_BaudRate = bound;//
+	USART_InitStructure.USART_BaudRate = bound;
 	USART_InitStructure.USART_WordLength = USART_WordLength_8b;//Word length: 8-bit
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;//StopBits: 1-bit
 	USART_InitStructure.USART_Parity = USART_Parity_No;//No parity
@@ -54,6 +54,7 @@ void USART3_IRQHandler(void)
 {
 	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) //Received data
 	{
+        USART_ClearITPendingBit(USART3,USART_IT_RXNE);
 		#if 0
 		static	int uart_receive=0;//Bluetooth receiving variables
 		uart_receive=USART_ReceiveData(USART3);

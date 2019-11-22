@@ -2,9 +2,9 @@
 #define __MPU6050_H
 
 #include "stm32f10x.h"
-#include "iic.h"
+#include "imu_iic.h"
 #include "delay.h"
-#include <stdio.h>
+#include "SEGGER_RTT.h"
 //#include "fusion.h"
 
 /* MPU6050 register */

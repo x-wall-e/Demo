@@ -1,44 +1,45 @@
-#include "iic.h"
+#include "oled_iic.h"
 
-/*************************************
-Function：static void IIC_GPIO_Configuration(void)
+/******************************************************
+Function：static void OLED_IIC_GPIO_Configuration(void)
 Description：iic gpio configuration
 Input:None
 Return:None
 Others:None
-*************************************/
-static void MPU6050_IIC_GPIO_Configuration(void)
+*******************************************************/
+static void OLED_IIC_GPIO_Configuration(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7 | GPIO_Pin_6;/* PB6、PB7 --> IIC */
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;/* 推挽输出 */
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;/* 50MHz翻转频率 */
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;// 推挽输出
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;// 50MHz翻转频率
   GPIO_Init(GPIOB, &GPIO_InitStructure);
 }
 
-/*************************************
-Function：void MPU6050_IIC_Init(void)
+/****************************************
+Function：void OLED_IIC_Init(void)
 Description：iic initialization
 Input:None
 Return:None
 Others:None
-*************************************/
-void MPU6050_IIC_Init(void)
+*****************************************/
+void OLED_IIC_Init(void)
 {
-    MPU6050_IIC_GPIO_Configuration();
-    GPIO_SetBits(GPIOB, GPIO_Pin_6| GPIO_Pin_7);
+    OLED_IIC_GPIO_Configuration();
+
+    GPIO_SetBits(GPIOB, GPIO_Pin_10| GPIO_Pin_11);
 }
 
 
-/*************************************
-Function：void IIC_Start(void)
+/********************************
+Function：void OLED_IIC_Start(void)
 Description：Generate iic start signal
 Input:None
 Return:None
 Others:None
-*************************************/
-void IIC_Start(void)
+*********************************/
+void OLED_IIC_Start(void)
 {
     SDA_OUT();/* SDA is set to output */
     IIC_SDA_H;
@@ -50,13 +51,13 @@ void IIC_Start(void)
 }
 
 /************************************
-Function：void IIC_Stop(void)
+Function：void OLED_IIC_Stop(void)
 Description：Generate iic stop signal
 Input:None
 Return:None
 Others:None
 ************************************/
-void IIC_Stop(void)
+void OLED_IIC_Stop(void)
 {
     SDA_OUT();/* SDA is set to output */
     IIC_SDA_L;
@@ -75,7 +76,7 @@ Return:u8	1: receive ACK fail
 			0: receive ACK success
 Others:None
 ******************************************************/
-u8 IIC_Wait_Ack(void)
+u8 OLED_IIC_Wait_Ack(void)
 {
     u8 ucErrTime = 0;
 
@@ -91,7 +92,7 @@ u8 IIC_Wait_Ack(void)
         ucErrTime++;
         if (ucErrTime > 250) /* 40*250=1ms did not reply, IIC master send a stop signal */
         {
-            IIC_Stop();
+            OLED_IIC_Stop();
             return 1;
         }
     }
@@ -99,14 +100,14 @@ u8 IIC_Wait_Ack(void)
     return 0;
 }
 
-/*********************************
-Function：void IIC_Ack(void)
+/********************************
+Function：void OLED_IIC_Ack(void)
 Description：Generate Ack response
 Input:None
 Return:None
 Others:None
 *********************************/
-void IIC_Ack(void)
+void OLED_IIC_Ack(void)
 {
     IIC_SCL_L;
     SDA_OUT();
@@ -117,14 +118,14 @@ void IIC_Ack(void)
     IIC_SCL_L;
 }
 
-/*********************************
-Function：void IIC_NAck(void)
+/********************************
+Function：void OLED_IIC_NAck(void)
 Description：Generate NAck response
 Input:None
 Return:None
 Others:None
 *********************************/
-void IIC_NAck(void)
+void OLED_IIC_NAck(void)
 {
     IIC_SCL_L;
     SDA_OUT();
@@ -135,14 +136,14 @@ void IIC_NAck(void)
     IIC_SCL_L;
 }
 
-/*********************************
-Function：void IIC_Send_Byte(u8 txd)
+/***************************************
+Function：void OLED_IIC_Send_Byte(u8 txd)
 Description：iic send a byte.
 Input:u8 txd
 Return:None
 Others:None
-*********************************/
-void IIC_Send_Byte(u8 txd)
+***************************************/
+void OLED_IIC_Send_Byte(u8 txd)
 {
     u8 t;
 
@@ -165,16 +166,16 @@ void IIC_Send_Byte(u8 txd)
     IIC_Wait_Ack();
 }
 
-/*********************************
-Function：u8 IIC_Read_Byte(u8 ack)
+/**************************************
+Function：u8 OLED_IIC_Read_Byte(u8 ack)
 Description：iic read a byte.
 Input:u8 ack 	ack=1，send ACK
 				ack=0，send nACK
 Return:u8 		1，has ack
 				0，has nACK
 Others: Return the slave's response
-*********************************/
-u8 IIC_Read_Byte(u8 ack)
+**************************************/
+u8 OLED_IIC_Read_Byte(u8 ack)
 {
     u8 i, receive = 0;
 

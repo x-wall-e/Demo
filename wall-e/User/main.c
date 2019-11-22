@@ -53,7 +53,6 @@
 #include "delay.h"
 #include "timer.h"
 #include "led.h"
-#include "iic.h"
 #include "usart1.h"
 #include "mpu6050.h"
 #include "nvic.h"
@@ -64,8 +63,11 @@
 //#include "usart3.h"
 //#include "bluetooth.h"
 #include "pwm.h"
+#include "sys.h"
 //#include "oled.h"
 #include <stdio.h>
+#include "SEGGER_RTT.h"
+#include "SEGGER_RTT_Conf.h"
 
 /**********************************Global Variable***********************************************************/
 /* Bluetooth remote control related variables */
@@ -102,36 +104,37 @@ static void prvSetupHardware(void)
 	SystemClock_HSE(9);
 	/* LED Configuration */
 	LED_Configuration();
+    /* Segger Configuration */
+    SEGGER_RTT_Init();
 	/* Systick Configuration */
 	delay_init();
-	delay_ms(2000);
 	/* Timer4 Configuration */
-	TIM4_Int_Init(999,SysClock);
+	//TIM4_Int_Init(999,SysClock);
 	/* IMU IIC Configuration */
 	MPU6050_IIC_Init();
 	/* MPU6050 Configuration */
-	MPU6050_Init();
+	//MPU6050_Init();
 	/* MPU6050 DMP Configuration */
-	mpu_dmp_init();
+	//mpu_dmp_init();
 	/* USART1 Configuration */
-	Uart1_Init();
+	//Uart1_Init();
 	/* USART3 Configuration */
 	//Uart3_Init(9600);
 	/* NVIC Configuration */
-	NVIC_Configuration();
+	//NVIC_Configuration();
 	/* Bluetooth Power On */
 	//BT_PowerInit();
 	/* USART3 Re-Configuration */
 	//Uart3_Init(115200);
 	/* Encoder Configuration*/
-	Encoder_Init_TIM2();
-	Encoder_Init_TIM3();
+	//Encoder_Init_TIM2();
+	//Encoder_Init_TIM4();
 	/* Init PWM 10KHZ for motor */
-	TIM1_PWM_Init(7199,0);
+	//TIM1_PWM_Init(7199,0);
 	delay_ms(1000);
-	delay_ms(1000);
+	//delay_ms(1000);
 	/* Motor io Configuration */
-	Motor_Init();
+	//Motor_Init();
 	/* OLED IIC Configuration */
 	//OLED_IIC_Init();
 	/* MPU6050 Configuration */
@@ -151,21 +154,26 @@ int main(void)
 
 	prvSetupHardware();
 
+    LED_Test();
+
 	printf("\r\n Hello Wall-e. \r\n");
 
-	AIN2=1,			AIN1=0;
-	BIN1=0,			BIN2=1;
+	//AIN2=1,			AIN1=0;
+	//BIN1=0,			BIN2=1;
 
  	while(1)
 	{
 			LED_Test();
+            MPU6050_Check();
+            delay_ms(1000);
 
+           #if 0
 			AIN2=1,			AIN1=0;
 			BIN1=0,			BIN2=1;
 
 			//100Hz Loop
       //if(loop100HzCnt>=10)
-			#if 0
+
 			if(loop200HzCnt>=5)
       {
 				printf("\r\nloop200HzCnt\r\n");
@@ -200,4 +208,5 @@ int main(void)
 			/* Encoder Test */
 			//printf("\r\nencoder2 = %d , encoder4 = %d\r\n",Read_Encoder(2),Read_Encoder(3));
 	}
+
 }
