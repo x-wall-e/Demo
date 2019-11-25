@@ -124,12 +124,13 @@ Log
     >(gdb) b 152
     >Breakpoint 1 at 0x80006b0: file ../User/main.c, line 152.
     >(gdb) r
-  >Don t know how to run.
-    
-    
-
+    >
+    >Don t know how to run.
+  
+  
   
 
+  
   - 2) 使用 JLink-RTT 用作 `printf` 输出调试信息。
     - JLink version：JLink-v654
     - 源码目录：`jlink/Samples/RTT/SEGGER_RTT_V654c/`
