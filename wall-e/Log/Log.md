@@ -125,13 +125,15 @@
     Don t know how to run.
     ```
 
-  
+    
 
+  
+  
   - 2) 使用 JLink-RTT 用作 `printf` 输出调试信息。
-- JLink version：JLink-v654
+    - JLink version：JLink-v654
     - 源码目录：`jlink/Samples/RTT/SEGGER_RTT_V654c/`
     - 使用：
       - `SEGGER_RTT_Init();`
-      - enjoy
+    - enjoy
     - 参考：https://www.segger.com/products/debug-probes/j-link/technology/about-real-time-transfer/
-    
+  
