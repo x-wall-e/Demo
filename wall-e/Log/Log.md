@@ -1,5 +1,26 @@
 Log
 
+- ##### 20191125 
+
+  - 1）github 忽略已经提交的文件 (.gitignore文件无效) 方法。
+
+    -  ① 删除track的文件 (**已经commit的文件**) 
+      - ` git rm 要忽略的文件 `
+      - ` git commit -a -m "删除不需要的文件"`
+    - ②  在`.gitignore`文件中添加忽略规则 
+      -  在`.gitignore`文件中添加ignore条目, 如: `some/path/some-file.ext` 
+      -  提交`.gitignore`文件: `git commit -a -m "添加ignore规则"` 
+    - ③  推送到远程仓库使 ignore 规则对其他开发者也能生效 
+    - 建议：**初始化git项目时就创建`.gitignore`文件**
+  
+  - 2）处理 git push 报错。
+  
+    > git Could not read from remote repository.Please make sure you have the correct access rights
+  
+    - ① `ssh-keygen -t rsa -C mail@mail.com`
+    - ② `less ~/.ssh/id_rsa.pub` 并添加 github
+    - ③ 连接确认：`ssh -T git@github.com`
+  
 - ##### 20191124
 
   - 1）串口3一直进入中断问题。
