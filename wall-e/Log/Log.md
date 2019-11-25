@@ -1,5 +1,22 @@
 Log
 
+- ##### 20191126
+
+  - Atom 在国内无法安装 Package 的解决方案。
+  - 以goto-definition为例：
+      - 到[Atom官方插件库](https://atom.io/packages)中搜索出goto-definition；
+      - 点击插件详情页中的Repo，进入该插件的Github仓库；
+      - clone该项目到你的Atom插件目录（Ubuntu： `~/.atom/packages`）；
+      - cd到该插件目录下，执行 `npm install`，安装完成。
+        - 安装过程中，npm install 报错`still pacote range manifest xxx` 的解决方法：
+          - `npm config set registry https://registry.npm.taobao.org`
+  - Atom 安装插件记录：
+    - `goto-definition`：跳转到定义处
+    - `highlight-selected`：选中内容高亮
+    - `minimap`：代码缩略图
+    - `minimap-highlight-selected`：minimap 中高亮选择内容
+    - `script`：在atom下运行脚本
+  
 - ##### 20191125 
 
   - 1）github 忽略已经提交的文件 (.gitignore文件无效) 方法。
@@ -157,4 +174,4 @@ Log
       - `SEGGER_RTT_Init();`
     - enjoy
     - 参考：https://www.segger.com/products/debug-probes/j-link/technology/about-real-time-transfer/
-  
+

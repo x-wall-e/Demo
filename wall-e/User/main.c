@@ -65,7 +65,7 @@
 #include "pwm.h"
 #include "sys.h"
 //#include "oled.h"
-#include <stdio.h>
+//#include <stdio.h>
 #include "SEGGER_RTT.h"
 #include "SEGGER_RTT_Conf.h"
 
@@ -159,16 +159,20 @@ int main(void)
 
 	printf("\r\n Hello Wall-e. \r\n");
 
+    //RTT_printf(0,"Hi RTT.\r\n");
+
 	//AIN2=1,			AIN1=0;
 	//BIN1=0,			BIN2=1;
 
  	while(1)
 	{
-			//LED_Test();
+			LED_Test();
             //BT_ATcmdWrite();
             //Uart3SendStr("AT\r\n");
             //MPU6050_Check();
-            Uart3SendStr("AT+NAMEWall-Lau\r\n");	
+            //Uart3SendStr("AT+NAMEWall-Lau\r\n");
+            printf("\r\n Hello Wall-e. \r\n");
+            //RTT_printf(0,"Hi RTT.\r\n");
             delay_ms(1000);
 
            #if 0
