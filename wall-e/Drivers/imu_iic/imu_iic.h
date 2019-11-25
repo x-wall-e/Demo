@@ -6,8 +6,8 @@
 #include "delay.h"
 
 //-----IIC Direction setting-----//
-#define SDA_IN()  {GPIOB->CRL&=0X0FFFFFFF;GPIOB->CRL|=8<<12;}	// Can be modified to input mode, both up and down input mode
-#define SDA_OUT() {GPIOB->CRL&=0X0FFFFFFF;GPIOB->CRL|=3<<12;}	// Can be modified to 50MHZ push-pull output, but faster with registers
+#define SDA_IN()  {GPIOB->CRL&=0XFFFF0FFF;GPIOB->CRL|=8<<12;}	// Can be modified to input mode, both up and down input mode
+#define SDA_OUT() {GPIOB->CRL&=0XFFFF0FFF;GPIOB->CRL|=3<<12;}	// Can be modified to 50MHZ push-pull output, but faster with registers
 
 #define IMU_SDA_PORT    GPIOB
 #define IMU_SDA_PIN     GPIO_Pin_3

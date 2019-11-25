@@ -1,6 +1,8 @@
 #ifndef __USRAT3_H
 #define __USRAT3_H
 
+#include <stdio.h>
+#include <string.h>
 #include "stm32f10x.h"
 #include "stm32f10x_usart.h"
 

@@ -32,7 +32,7 @@ void Uart1_Init(void)
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
 
     USART_GPIO_Configuration();
-    USART_InitStructure.USART_BaudRate = BAUD;                                          // 波特率
+    USART_InitStructure.USART_BaudRate = 9600;                                          // 波特率
     USART_InitStructure.USART_WordLength = USART_WordLength_8b;                         // 数据长度，如果有奇偶校验，则字长必须为9bits，参见stm32f10x_usart.h Line63
     USART_InitStructure.USART_StopBits = USART_StopBits_1;                              // 停止位
     USART_InitStructure.USART_Parity = USART_Parity_No;                                 // 奇偶校验
@@ -84,7 +84,7 @@ u8 USART_GetChar(void)
     return (u8)USART_ReceiveData(USART1);
 }
 
-#if 0
+#if 1
 int _read(int file, char *ptr, int len)
 {
     int i;

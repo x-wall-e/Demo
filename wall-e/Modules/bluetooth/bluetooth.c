@@ -1,11 +1,11 @@
 #include "bluetooth.h"
 
-const char ATcmdAsk[]    =		 {"AT"};
-const char ATcmdNameSet[] = 	 {"AT+NAMEWall-e"};    //Set bluetooth module name：Wall-e
-const char ATcmdCodeSet[] =		 {"AT+PIN1234"};       //Set bluetooth module pin：1234
-const char ATcmdRenewAsk[] = 	 {"AT+RENEW"};		   //Reset bluetooth module
-const char ATcmdRenewAnswer[] = {"OK+RENEW"};
-const char ATcmdBaudSet[] =    {"AT+BAUD8"};           //Set bluetooth module baud:115200
+const char ATcmdAsk[]       =   {"AT\r\n"};
+const char ATcmdNameSet[]   =   {"AT+NAMEWall-e\r\n"};      //Set bluetooth module name：Wall-e
+const char ATcmdCodeSet[]   =   {"AT+PIN1234\r\n"};         //Set bluetooth module pin：1234
+const char ATcmdRenewAsk[]  =   {"AT+RESET\r\n"};           //Reset bluetooth module
+const char ATcmdBaudSet[]   =   {"AT+BAUD8\r\n"};           //Set bluetooth module baud:115200
+const char ATcmdDefault[]   =   {"AT+DEFAULT\r\n"};
 
 /*******************************************************************
 Function:void BT_ATcmdWrite(void)
@@ -37,11 +37,15 @@ Others:
 void BT_ATcmdWrite(void)
 {
 	delay_ms(100);
+    //Uart3SendStr("AT+DEFAULT\r\n");
 	Uart3SendStr("AT\r\n");
-	Uart3SendStr("AT+NAMEWall-e\r\n");	 //Set bluetooth module name：Wall-e
+    delay_ms(100);
+    Uart3SendStr("AT+DEFAULT\r\n");
+    delay_ms(100);
+	Uart3SendStr("AT+NAMEWall-Lau\r\n");	 //Set bluetooth module name：Wall-e
 	delay_ms(100);
-	Uart3SendStr("AT+BAUD8\r\n"); 		 //Set bluetooth module baud:115200
-	delay_ms(100);
+	//Uart3SendStr("AT+BAUD8\r\n"); 		 //Set bluetooth module baud:115200
+	//delay_ms(100);
 }
 
 /**************************************************************************

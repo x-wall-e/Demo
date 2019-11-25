@@ -63,3 +63,13 @@ iap/project/
 # Source insight 
 iap/si/
 
+# Jlink
+wall-e/Project/JLink.exe
+wall-e/Project/JLinkRTTClient.exe
+wall-e/Project/JLinkCommandFile.jlink
+wall-e/Project/jlink.py
+wall-e/Project/jlink.bat
+
+# Log
+wall-e/Log/Log.md
+

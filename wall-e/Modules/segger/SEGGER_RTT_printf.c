@@ -510,6 +510,7 @@ int SEGGER_RTT_printf(unsigned BufferIndex, const char * sFormat, ...) {
 
 /*********************************************************************/
 //Laurence add for float printf
+#if 0
 signed int RTT_printf(unsigned BufferIndex,const char *pFormat, ...){
 
     char pStr[50] = {'\0'};
@@ -536,5 +537,6 @@ int printf(const char *fmt,...) {
   va_end(args);
   return n;
 }
+#endif
 /*********************************************************************/
 /*************************** End of file ****************************/

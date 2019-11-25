@@ -61,7 +61,7 @@
 #include "inv_mpu.h"
 #include "motor.h"
 //#include "usart3.h"
-//#include "bluetooth.h"
+#include "bluetooth.h"
 #include "pwm.h"
 #include "sys.h"
 //#include "oled.h"
@@ -105,23 +105,24 @@ static void prvSetupHardware(void)
 	/* LED Configuration */
 	LED_Configuration();
     /* Segger Configuration */
-    SEGGER_RTT_Init();
+    //SEGGER_RTT_Init();
 	/* Systick Configuration */
 	delay_init();
 	/* Timer4 Configuration */
 	//TIM4_Int_Init(999,SysClock);
 	/* IMU IIC Configuration */
-	MPU6050_IIC_Init();
+	//MPU6050_IIC_Init();
 	/* MPU6050 Configuration */
 	//MPU6050_Init();
 	/* MPU6050 DMP Configuration */
 	//mpu_dmp_init();
 	/* USART1 Configuration */
-	//Uart1_Init();
+	Uart1_Init();
 	/* USART3 Configuration */
-	//Uart3_Init(9600);
+	Uart3_Init(9600);
+    BT_ATcmdWrite();
 	/* NVIC Configuration */
-	//NVIC_Configuration();
+	NVIC_Configuration();
 	/* Bluetooth Power On */
 	//BT_PowerInit();
 	/* USART3 Re-Configuration */
@@ -163,8 +164,11 @@ int main(void)
 
  	while(1)
 	{
-			LED_Test();
-            MPU6050_Check();
+			//LED_Test();
+            //BT_ATcmdWrite();
+            //Uart3SendStr("AT\r\n");
+            //MPU6050_Check();
+            Uart3SendStr("AT+NAMEWall-Lau\r\n");	
             delay_ms(1000);
 
            #if 0

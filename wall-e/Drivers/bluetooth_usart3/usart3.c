@@ -52,9 +52,14 @@ Others:None
 *************************************/
 void USART3_IRQHandler(void)
 {
+    //LED_Test();
+    printf("USART3_IRQHandler\r\n");
 	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) //Received data
 	{
-        USART_ClearITPendingBit(USART3,USART_IT_RXNE);
+        static int uart_receive=0;
+        //USART_ClearITPendingBit(USART3,USART_IT_RXNE);
+        uart_receive=USART_ReceiveData(USART3);
+        printf("%d",uart_receive);
 		#if 0
 		static	int uart_receive=0;//Bluetooth receiving variables
 		uart_receive=USART_ReceiveData(USART3);
