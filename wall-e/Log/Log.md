@@ -122,14 +122,16 @@ Log
   - 1) 使用 Open-OCD 进行 GDB 调试时出现 `Don't know how to run` 问题。
     
     >(gdb) b 152
+    >
     >Breakpoint 1 at 0x80006b0: file ../User/main.c, line 152.
+    >
     >(gdb) r
     >
-    >Don t know how to run.
+  >Don t know how to run.
   
   
   
-
+  
   
   - 2) 使用 JLink-RTT 用作 `printf` 输出调试信息。
     - JLink version：JLink-v654
