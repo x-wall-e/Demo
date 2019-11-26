@@ -105,7 +105,7 @@ static void prvSetupHardware(void)
 	/* LED Configuration */
 	LED_Configuration();
     /* Segger Configuration */
-    //SEGGER_RTT_Init();
+    SEGGER_RTT_Init();
 	/* Systick Configuration */
 	delay_init();
 	/* Timer4 Configuration */
@@ -159,6 +159,7 @@ int main(void)
 
 	printf("\r\n Hello Wall-e. \r\n");
 
+
     //RTT_printf(0,"Hi RTT.\r\n");
 
 	//AIN2=1,			AIN1=0;
@@ -171,8 +172,8 @@ int main(void)
             //Uart3SendStr("AT\r\n");
             //MPU6050_Check();
             //Uart3SendStr("AT+NAMEWall-Lau\r\n");
-            printf("\r\n Hello Wall-e. \r\n");
-            //RTT_printf(0,"Hi RTT.\r\n");
+            printf("Hey RTT. %d % f\r\n",encoder2,f);
+            //printf(0,"Hi RTT Laurence here.\r\n");
             delay_ms(1000);
 
            #if 0

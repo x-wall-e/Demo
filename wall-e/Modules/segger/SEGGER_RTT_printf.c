@@ -507,36 +507,4 @@ int SEGGER_RTT_printf(unsigned BufferIndex, const char * sFormat, ...) {
   va_end(ParamList);
   return r;
 }
-
-/*********************************************************************/
-//Laurence add for float printf
-#if 0
-signed int RTT_printf(unsigned BufferIndex,const char *pFormat, ...){
-
-    char pStr[50] = {'\0'};
-    va_list ap;
-    signed int result;
-
-    // Forward call to vprintf
-    va_start(ap, pFormat);
-    result = vsprintf((char *)pStr, pFormat, ap);
-    va_end(ap);
-
-    SEGGER_RTT_WriteString(BufferIndex,(char *)pStr);
-
-    return result;
-}
-
-int printf(const char *fmt,...) {
-
-  char buffer[128];
-  va_list args;
-  va_start (args, fmt);
-  int n = vsnprintf(buffer, sizeof(buffer), fmt, args);
-  SEGGER_RTT_Write(0, buffer, n);
-  va_end(args);
-  return n;
-}
-#endif
-/*********************************************************************/
 /*************************** End of file ****************************/

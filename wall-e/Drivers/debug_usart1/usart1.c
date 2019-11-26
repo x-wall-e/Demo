@@ -84,7 +84,7 @@ u8 USART_GetChar(void)
     return (u8)USART_ReceiveData(USART1);
 }
 
-#if 1
+#if 0
 int _read(int file, char *ptr, int len)
 {
     int i;

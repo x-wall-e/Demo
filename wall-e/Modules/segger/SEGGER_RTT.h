@@ -54,7 +54,7 @@
 ---------------------------END-OF-HEADER------------------------------
 File    : SEGGER_RTT.h
 Purpose : Implementation of SEGGER real-time transfer which allows
-          real-time communication on targets which support debugger
+          real-time communication on targets which support debugger 
           memory accesses while the CPU is running.
 Revision: $Rev: 16714 $
 ----------------------------------------------------------------------
@@ -243,9 +243,6 @@ int     SEGGER_RTT_TerminalOut        (unsigned char TerminalId, const char* s);
 *
 **********************************************************************
 */
-//signed int RTT_printf(unsigned BufferIndex,const char *pFormat, ...);//Laurence add for float 01
-//int printf(const char *fmt,...) ;//Laurence add for float 02
-
 int SEGGER_RTT_printf(unsigned BufferIndex, const char * sFormat, ...);
 int SEGGER_RTT_vprintf(unsigned BufferIndex, const char * sFormat, va_list * pParamList);
 
