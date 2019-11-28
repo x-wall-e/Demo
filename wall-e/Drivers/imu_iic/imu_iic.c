@@ -10,16 +10,12 @@ Others:None
 static void MPU6050_IIC_GPIO_Configuration(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
-  GPIO_InitStructure.GPIO_Pin =  IMU_SCL_PIN;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;/* 推挽输出 */
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;/* 50MHz翻转频率 */
-  GPIO_Init(IMU_SCL_PORT, &GPIO_InitStructure);
 
-  GPIO_InitStructure.GPIO_Pin = IMU_SDA_PIN;
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
+  GPIO_InitStructure.GPIO_Pin =  IMU_SCL_PIN | IMU_SDA_PIN;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;/* 推挽输出 */
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;/* 50MHz翻转频率 */
-  GPIO_Init(IMU_SDA_PORT, &GPIO_InitStructure);
+  GPIO_Init(IMU_I2C_PORT, &GPIO_InitStructure);
 }
 
 /*************************************
@@ -32,8 +28,10 @@ Others:None
 void MPU6050_IIC_Init(void)
 {
     MPU6050_IIC_GPIO_Configuration();
-    GPIO_SetBits(IMU_SCL_PORT, IMU_SCL_PIN);
-    GPIO_SetBits(IMU_SDA_PORT, IMU_SDA_PIN);
+    GPIO_ResetBits(IMU_SCL_PORT, IMU_SCL_PIN);
+    GPIO_ResetBits(IMU_SDA_PORT, IMU_SDA_PIN);
+    //GPIO_SetBits(IMU_SCL_PORT, IMU_SCL_PIN);
+    //GPIO_SetBits(IMU_SDA_PORT, IMU_SDA_PIN);
 }
 
 

@@ -1,5 +1,7 @@
 #include "timer.h"
-#include <stdio.h>
+//#include <stdio.h>
+#include "SEGGER_RTT.h"
+#include "SEGGER_RTT_Conf.h"
 
 volatile uint16_t anyCnt=0,anyCnt2=0;
 uint8_t  loop500HzFlag,loop200HzFlag,loop50HzFlag,loop600HzFlag,loop100HzFlag,loop20HzFlag,loop10HzFlag;
@@ -13,7 +15,7 @@ Input:
 	u16 psc：clock prescaler
 Return:None
 Others:
-	Tout = (1+TIM_Prescaler ) * (1+TIM_Period ) / Tclk    
+	Tout = (1+TIM_Prescaler ) * (1+TIM_Period ) / Tclk
 **********************************************************************************************************/
 void TIM4_Int_Init(u16 arr,u16 psc)
 {
@@ -23,11 +25,11 @@ void TIM4_Int_Init(u16 arr,u16 psc)
 
 	TIM_DeInit(TIM4);
 
-	/*********************************************************+ 
-	| (1 + 71)*(1 + 999) / (72M) Hz = 0.001 s = 1ms //1KHz	  | 
+	/*********************************************************+
+	| (1 + 71)*(1 + 999) / (72M) Hz = 0.001 s = 1ms //1KHz	  |
 	**********************************************************/
 	TIM_TimeBaseStructure.TIM_Period = arr; /* The period value to be loaded into the active Auto-Reload Register at the next update event */
-	TIM_TimeBaseStructure.TIM_Prescaler = psc; 
+	TIM_TimeBaseStructure.TIM_Prescaler = psc;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseInit(TIM4, &TIM_TimeBaseStructure);

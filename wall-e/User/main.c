@@ -74,7 +74,7 @@
 int 	Flag_Forward,Flag_Backward,Flag_Left,Flag_Right;
 
 /*IMUֱ direct sampled data structure */
-struct MPU6050_tag g_MPU6050Data;
+//struct MPU6050_tag g_MPU6050Data;
 
 volatile float pitch = 0.0,roll = 0.0,yaw = 0.0;
 
@@ -109,7 +109,7 @@ static void prvSetupHardware(void)
 	/* Systick Configuration */
 	delay_init();
 	/* Timer4 Configuration */
-	//TIM4_Int_Init(999,SysClock);
+	TIM4_Int_Init(999,SysClock);//Sysclock = 589826376?
 	/* IMU IIC Configuration */
 	//MPU6050_IIC_Init();
 	/* MPU6050 Configuration */
@@ -119,8 +119,8 @@ static void prvSetupHardware(void)
 	/* USART1 Configuration */
 	Uart1_Init();
 	/* USART3 Configuration */
-	Uart3_Init(9600);
-    BT_ATcmdWrite();
+	//Uart3_Init(9600);
+    //BT_ATcmdWrite();
 	/* NVIC Configuration */
 	NVIC_Configuration();
 	/* Bluetooth Power On */
@@ -128,8 +128,8 @@ static void prvSetupHardware(void)
 	/* USART3 Re-Configuration */
 	//Uart3_Init(115200);
 	/* Encoder Configuration*/
-	//Encoder_Init_TIM2();
-	//Encoder_Init_TIM4();
+	Encoder_Init_TIM5();
+	Encoder_Init_TIM4();
 	/* Init PWM 10KHZ for motor */
 	//TIM1_PWM_Init(7199,0);
 	delay_ms(1000);
@@ -151,7 +151,7 @@ int main(void)
 	float f = 1.2;
 	s16 temp;
 	volatile int reg = 0;
-	int encoder2 = 0, encoder3 = 0;
+	int encoder5 = 0, encoder4 = 0;
 
 	prvSetupHardware();
 
@@ -159,22 +159,24 @@ int main(void)
 
 	printf("\r\n Hello Wall-e. \r\n");
 
-
-    //RTT_printf(0,"Hi RTT.\r\n");
-
 	//AIN2=1,			AIN1=0;
 	//BIN1=0,			BIN2=1;
 
+    //GPIO_SetBits(IMU_SCL_PORT, IMU_SCL_PIN);
+    //GPIO_SetBits(IMU_SDA_PORT, IMU_SDA_PIN);
+    //GPIO_ResetBits(IMU_SCL_PORT, IMU_SCL_PIN);
+    //GPIO_ResetBits(IMU_SDA_PORT, IMU_SDA_PIN);
+
  	while(1)
 	{
+
+            //delay_ms(100);
 			LED_Test();
-            //BT_ATcmdWrite();
-            //Uart3SendStr("AT\r\n");
+            encoder5 = Read_Encoder(TIM5);
+            encoder4 = Read_Encoder(TIM4);
             //MPU6050_Check();
-            //Uart3SendStr("AT+NAMEWall-Lau\r\n");
-            printf("Hey RTT. %d % f\r\n",encoder2,f);
-            //printf(0,"Hi RTT Laurence here.\r\n");
-            delay_ms(1000);
+            printf("encoder5 = %d encoder4 = %d\r\n",encoder5,encoder4);
+
 
            #if 0
 			AIN2=1,			AIN1=0;

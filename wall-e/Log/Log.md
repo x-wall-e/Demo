@@ -147,9 +147,9 @@ Log
           va_list ap;
           signed int result;
       
-      // Forward call to vprintf
+      	// Forward call to vprintf
           va_start(ap, pFormat);
-      result = vsprintf((char * )pStr, pFormat, ap);
+      	result = vsprintf((char * )pStr, pFormat, ap);
           va_end(ap);
       
           SEGGER_RTT_WriteString(BufferIndex,(char * )pStr);
@@ -157,21 +157,23 @@ Log
           return result;
   }
       ```
-    
-  - ~~方式2：添加~~
-    
-    ```c
-    int printf(const char * fmt,...) {
-    
-      char buffer[128];
-      va_list args;
-      va_start (args, fmt);
-      int n = vsnprintf(buffer, sizeof(buffer), fmt, args);
-      SEGGER_RTT_Write(0, buffer, n);
-      va_end(args);
-      return n;
-    }
-    ```
+      
+    - ~~方式2：添加~~
+      
+      ```c
+      int printf(const char * fmt,...) {
+      
+        char buffer[128];
+        va_list args;
+        va_start (args, fmt);
+        int n = vsnprintf(buffer, sizeof(buffer), fmt, args);
+        SEGGER_RTT_Write(0, buffer, n);
+        va_end(args);
+        return n;
+      }
+      ```
+      
+      
     
     
 
@@ -189,7 +191,7 @@ Log
     >
     >(gdb) r
     >
-  >Don ‘t know how to run.
+    >Don ‘t know how to run.
 
 - 2) 使用 JLink-RTT 用作 `printf` 输出调试信息。
     - JLink version：JLink-v654

@@ -2,18 +2,18 @@
 
 
 /********************************************
-Function:void Encoder_Init_TIM2(void)
-Description: Initialize TIM2 to encoder mode
+Function:void Encoder_Init_TIM5(void)
+Description: Initialize TIM5 to encoder mode
 Input:None
 Return:None
 Others:None
 *********************************************/
-void Encoder_Init_TIM2(void)
+void Encoder_Init_TIM5(void)
 {
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
     TIM_ICInitTypeDef TIM_ICInitStructure;
     GPIO_InitTypeDef GPIO_InitStructure;
-    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);/* Enable Tim2 clock */
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM5, ENABLE);/* Enable Tim5 clock */
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);/* Enable GPIOA clock */
 
     GPIO_InitStructure.GPIO_Pin = ENCODERA_PIN_1|ENCODERA_PIN_2;  /* Port configuration */
@@ -125,7 +125,7 @@ Input:None
 Return:None
 Others:None
 *********************************************/
-void TIM2_IRQHandler(void)
+void TIM5_IRQHandler(void)
 {
     if(TIM2->SR & 0X0001)/* Overflow interrupt */
     {
