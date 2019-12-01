@@ -1,7 +1,13 @@
-#ifndef __CONTROL_H
+﻿#ifndef __CONTROL_H
 #define __CONTROL_H
 
+#include "stm32f10x_exti.h"
+#include "stm32f10x.h"
+#include "sys.h"
 
-int Balance_UP(float Angle,float Mechanical_balance,float Gyro);
-int Velocity(int encoder_left,int encoder_right);
+#define PI 3.14159265
+void EXTI9_5_IRQHandler(void);
+int balance_UP(float Angle,float Mechanical_balance,float Gyro);
+int velocity(int encoder_left,int encoder_right);
+int turn(int encoder_left,int encoder_right,float gyro);
 #endif

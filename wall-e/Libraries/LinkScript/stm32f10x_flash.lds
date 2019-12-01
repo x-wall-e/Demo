@@ -1,4 +1,4 @@
-/*
+﻿/*
  * GCC linker script for STM32 microcontrollers (ARM Cortex-M).
  *
  * It exports the symbols needed for the CMSIS assembler startup script for GCC

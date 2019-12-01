@@ -29,7 +29,7 @@ void Uart1_Init(void)
 {
     USART_InitTypeDef USART_InitStructure;
 
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1|RCC_APB2Periph_AFIO, ENABLE);
 
     USART_GPIO_Configuration();
     USART_InitStructure.USART_BaudRate = 9600;                                          // 波特率
@@ -85,6 +85,7 @@ u8 USART_GetChar(void)
 }
 
 #if 0
+/* use uart for printf in gcc. */
 int _read(int file, char *ptr, int len)
 {
     int i;

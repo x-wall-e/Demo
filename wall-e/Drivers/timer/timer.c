@@ -3,9 +3,9 @@
 #include "SEGGER_RTT.h"
 #include "SEGGER_RTT_Conf.h"
 
-volatile uint16_t anyCnt=0,anyCnt2=0;
-uint8_t  loop500HzFlag,loop200HzFlag,loop50HzFlag,loop600HzFlag,loop100HzFlag,loop20HzFlag,loop10HzFlag;
-volatile uint16_t loop500Hzcnt,loop200HzCnt,loop50HzCnt , loop600HzCnt,loop100HzCnt, loop20HzCnt , loop10HzCnt=0;
+//volatile uint16_t anyCnt=0,anyCnt2=0;
+//uint8_t  loop500HzFlag,loop200HzFlag,loop50HzFlag,loop600HzFlag,loop100HzFlag,loop20HzFlag,loop10HzFlag;
+//volatile uint16_t loop500Hzcnt,loop200HzCnt,loop50HzCnt , loop600HzCnt,loop100HzCnt, loop20HzCnt , loop10HzCnt=0;
 
 /********************************************************************************************************
 Function:void TIM4_Int_Init(u16 arr,u16 psc)
@@ -45,7 +45,7 @@ void TIM4_Int_Init(u16 arr,u16 psc)
 	/* Enable TIMx */
 	TIM_Cmd(TIM4, ENABLE);
 }
-
+#if 0
 /*********************************************************************************************************
 Function:void TIM4_IRQHandler(void)
 Description: TIM4 IRQHandler
@@ -86,3 +86,4 @@ void TIM4_IRQHandler(void)  // 1ms
 		}
 	}
 }
+#endif

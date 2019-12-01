@@ -28,18 +28,13 @@ void NVIC_Configuration(void)
 	/* Use NVIC interrupt Group 2: 2-bit preemption priority, 2-bit response priority */
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 
+    #if 0
 	/* Timer 3 NVIC interrupt priority configuration (Main loop reference timer)*/
 	NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x01; /* Preemption priority: 1 */
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x01;  		 /* Response priority: 1 */
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; 			 /* IRQ channel enable */
 	NVIC_Init(&NVIC_InitStructure);
-
-	/* Usart3 NVIC interrupt priority configuration (Bluetooth serial port configuration) */
-	NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=0x02 ;/* Preemption priority: 2 */
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x02;	   /* Response priority: 2 */
-	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			   /* IRQ channel enable */
-	/* Initialize the peripheral NVIC register according to the parameters specified in NVIC_InitStruct	*/
+    #endif
 	NVIC_Init(&NVIC_InitStructure);
 }
