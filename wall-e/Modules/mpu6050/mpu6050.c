@@ -1,343 +1,223 @@
-#include "mpu6050.h"
+﻿#include "mpu6050.h"
+#include "delay.h"
 
-/* IMUֱ direct sampled data structure */
-extern struct MPU6050_tag g_MPU6050Data;
-/* IMU filtered, calibrated data structure */
-struct MPU6050Filter_tag g_MPU6050Data_Filter;
-/* IMU calibration parameter */
-s32 g_Gyro_xoffset = 0, g_Gyro_yoffset = 0, g_Gyro_zoffset = 0;
-s32 g_Acc_xoffset = 0, g_Acc_yoffset = 0, g_Acc_zoffset = 0;
-
-
-
-/*************************************
-Function：void MPU6050_WirteByte(u8 reg, u8 data)
-Description：MPU6050 single-byte write
-Input:
-	u8 reg：Register address
-	u8 data：Bytes to be written
-Return:None
-Others:None
-*************************************/
-void MPU6050_WirteByte(u8 reg, u8 data)
+//初始化MPU6050
+//返回值:0,成功
+//其他,错误代码
+u8 MPU_Init(void)
 {
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE);      // Transmit device address + write signal
-    IIC_Send_Byte(reg);                 // Register address
-    IIC_Send_Byte(data);                // Bytes to be written
-    IIC_Stop();
-}
-
-/*************************************
-Function：u8 MPU6050_ReadByte(u8 reg)
-Description：MPU6050 single-byte read
-Input:
-	u8 reg：Register address
-Return:
-	u8 data：Byte read
-Others:None
-*************************************/
-u8 MPU6050_ReadByte(u8 reg)
-{
-    u8 tmp;
-
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE);          // Transmit device address + write signal
-    IIC_Send_Byte(reg);                     // Register address to be read
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE + 1);      // Transmit device address + read signal
-    tmp = IIC_Read_Byte(0);                 // Reading data and generate nACK
-    IIC_Stop();
-
-    return tmp;
-}
-
-
-u8 MPU_Read_Len(u8 dev, u8 reg, u8 length, u8 *data)
-{
-    u8 count = 0;
-    u8 temp;
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE);    //发送写命令
-    IIC_Send_Byte(reg);   //发送地址
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE+1);  //进入接收模式
-
-    for(count=0;count<length;count++){
-
-         if(count!=(length-1))
-            temp = IIC_Read_Byte(1);  //带ACK的读数据
-            else
-            temp = IIC_Read_Byte(0);     //最后一个字节NACK
-
-        data[count] = temp;
-    }
-    IIC_Stop();//产生一个停止条件
+    u8 res;
+    MPU_IIC_Init();//初始化IIC总线
+    MPU_Write_Byte(MPU_PWR_MGMT1_REG,0X80);	//复位MPU6050
+    delay_ms(100);
+    MPU_Write_Byte(MPU_PWR_MGMT1_REG,0X00);	//唤醒MPU6050
+    MPU_Set_Gyro_Fsr(3);					//陀螺仪传感器,±2000dps
+    MPU_Set_Accel_Fsr(0);					//加速度传感器,±2g
+    MPU_Set_Rate(200);						//设置采样率50Hz
+    MPU_Write_Byte(MPU_INT_EN_REG,0X00);	//关闭所有中断
+    MPU_Write_Byte(MPU_USER_CTRL_REG,0X00);	//I2C主模式关闭
+    MPU_Write_Byte(MPU_FIFO_EN_REG,0X00);	//关闭FIFO
+    MPU_Write_Byte(MPU_INTBP_CFG_REG,0X80);	//INT引脚低电平有效
+    res=MPU_Read_Byte(MPU_DEVICE_ID_REG);
+    if(res==MPU_ADDR)//器件ID正确
+    {
+    	MPU_Write_Byte(MPU_PWR_MGMT1_REG,0X01);	//设置CLKSEL,PLL X轴为参考
+    	MPU_Write_Byte(MPU_PWR_MGMT2_REG,0X00);	//加速度与陀螺仪都工作
+    	MPU_Set_Rate(200);						//设置采样率为50Hz
+    	}else return 1;
     return 0;
 }
-
-u8 MPU_Write_Len(u8 dev, u8 reg, u8 length, u8* data)
+//设置MPU6050陀螺仪传感器满量程范围
+//fsr:0,±250dps;1,±500dps;2,±1000dps;3,±2000dps
+//返回值:0,设置成功
+//    其他,设置失败
+u8 MPU_Set_Gyro_Fsr(u8 fsr)
 {
-
-    u8 count = 0;
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE);    //发送写命令
-    IIC_Send_Byte(reg);   //发送地址
-    for(count=0;count<length;count++){
-        IIC_Send_Byte(data[count]);
-     }
-    IIC_Stop();//产生一个停止条件
-
-    return 0; //status == 0;
+    return MPU_Write_Byte(MPU_GYRO_CFG_REG,fsr<<3);//设置陀螺仪满量程范围
+}
+//设置MPU6050加速度传感器满量程范围
+//fsr:0,±2g;1,±4g;2,±8g;3,±16g
+//返回值:0,设置成功
+//    其他,设置失败
+u8 MPU_Set_Accel_Fsr(u8 fsr)
+{
+    return MPU_Write_Byte(MPU_ACCEL_CFG_REG,fsr<<3);//设置加速度传感器满量程范围
+}
+//设置MPU6050的数字低通滤波器
+//lpf:数字低通滤波频率(Hz)
+//返回值:0,设置成功
+//    其他,设置失败
+u8 MPU_Set_LPF(u16 lpf)
+{
+    u8 data=0;
+    if(lpf>=188)data=1;
+    else if(lpf>=98)data=2;
+    else if(lpf>=42)data=3;
+    else if(lpf>=20)data=4;
+    else if(lpf>=10)data=5;
+    else data=6;
+    return MPU_Write_Byte(MPU_CFG_REG,data);//设置数字低通滤波器
+}
+//设置MPU6050的采样率(假定Fs=1KHz)
+//rate:4~1000(Hz)
+//返回值:0,设置成功
+//    其他,设置失败
+u8 MPU_Set_Rate(u16 rate)
+{
+    u8 data;
+    if(rate>1000)rate=1000;
+    if(rate<4)rate=4;
+    data=1000/rate-1;
+    data=MPU_Write_Byte(MPU_SAMPLE_RATE_REG,data);	//设置数字低通滤波器
+    	return MPU_Set_LPF(rate/2);	//自动设置LPF为采样率的一半
 }
 
-/**********************************************************************
-Function：void MPU6050_getDeviceID(u8 reg)
-Description：read  MPU6050 WHO_AM_I register
-Input:None
-Return:
-	uint8_t: 0x68
-Others:None
-***********************************************************************/
-static uint8_t MPU6050_getDeviceID(void)
-{
-	uint8_t id;
-
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE);              // Transmit device address + write signal
-    IIC_Send_Byte(WHO_AM_I);                    // Register address to be read
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE + 1);          // Transmit device address + read signal
-    id = IIC_Read_Byte(0);                      // Reading data and generate nACK
-    IIC_Stop();
-    printf("id = %02x\r\n",id);
-    return id;
-}
-
-/**********************************************************************
-Function：void MPU6050_testConnection(void)
-Description：Test mpu6050 connection
-Input:None
-Return:
-		1: Connect ok.
-		2: No connection.
-Others:None
-***********************************************************************/
-static uint8_t MPU6050_testConnection(void)
-{
-	if(MPU6050_getDeviceID() == 0x68)  //0b01101000;
-		return 1;
-	else
-		return 0;
-}
-
-/**********************************************************************
-Function：void MPU6050_Check(void)
-Description：Check MPU6050 found or not
-Input:None
-Return:None
-Others:None
-***********************************************************************/
-void MPU6050_Check(void)
-{
-  switch(MPU6050_testConnection())
-  {
-    case 0:
-		    printf(0,"MPU6050 not found...\r\n");
-		    break;
-    case 1:
-		    printf(0,"MPU6050 check success...\r\n");
-		    break;
-  }
-}
-
-/*************************************
-Function：void MPU6050_Init(void)
-Description：Initial MPU6050
-Input:None
-Return:None
-Others:
-	- Gyro and Accelerometer sampling rates is related to the Gyroscope Output Rate and DLPF.
-	- Sample Rate = Gyroscope Output Rate / (1 + SMPLRT_DIV).
-	- Gyroscope Output Rate = 1kHz.
-	- Accelerometer Output Rate = 1kHz.
-	- The larger the bandwidth, the more sensitive, the louder the noise, the larger the output frequency needed, and the larger the sampling rate.
-*************************************/
-
-void MPU6050_Init(void)
-{
-    #if 0
-    MPU6050_WirteByte(PWR_MGMT_1, 0x80);	//0x6B: Resets all internal registers to their default values.The bit automatically clears to 0 once the reset is done.
-    delay_ms(100);
-    MPU6050_WirteByte(PWR_MGMT_1, 0x00);	//0x6B: Release the sleep state and enable the temperature sensor.
-
-    MPU6050_WirteByte(SMPLRT_DIV, 0x01); 	//0x19: SMPLRT_DIV: 1
-    MPU6050_WirteByte(MPU6050_CONFIG, 0x06);//0x1A: DLPF_CFG[2:0] Bandwidth = 5 HZ.
-											//		The bandwidth in DLPF is set to a minimum of 5 Hz.
-											//		Although it is not sensitive, but the noise is small.
-											//		Gyroscope Output Rate = 8kHz when the DLPF is disabled (DLPF_CFG = 0 or 7), and 1kHz when the DLPF is enabled.
-											//		+----------------------------------------------------+
-											//		|Sampling frequency: 1KHz / (SMPLRT_DIV + 1) = 500Hz |
-											//		+----------------------------------------------------+
-
-    MPU6050_WirteByte(GYRO_CONFIG, 0x08);	//0x1B: Range ±500°/s or ±500dps.
-    MPU6050_WirteByte(ACCEL_CONFIG, 0x08);	//0x1C: Range ±4g.
-    #endif
-	#if 1
-	MPU6050_WirteByte(PWR_MGMT_1, 0x80); 	//0x6B: Resets all internal registers to their default values.
-											//		The bit automatically clears to 0 once the reset is done.
-    delay_ms(100);
-
-    MPU6050_WirteByte(PWR_MGMT_1, 0x00);	//0x6B: Release the sleep state and enable the temperature sensor.
-	MPU6050_WirteByte(GYRO_CONFIG, 0x08);	//0x1B: ±500dps
-	MPU6050_WirteByte(ACCEL_CONFIG, 0x00);	//0x1C: ±2g
-	/* 采样频率大于被采样信号最高频率的两倍 */
-	MPU6050_WirteByte(SMPLRT_DIV, 0x01);	//0x19: Sample Rate Divider: 500Hz
-	MPU6050_WirteByte(MPU6050_CONFIG, 0x02);//0x1A: DLPF_CFG[2:0] Accelerometer Bandwidth = 184 Hz, Gyroscope Bandwidth = 188Hz
-	MPU6050_WirteByte(MPU_INT_EN_REG,0X00);	//0x38: Disable all interrupt
-	MPU6050_WirteByte(MPU_USER_CTRL_REG,0X00);	//0x6A: Disable I2C master mode
-	MPU6050_WirteByte(MPU_FIFO_EN_REG,0X00);	//0x23: Disable FIFO
-	MPU6050_WirteByte(MPU_INTBP_CFG_REG,0X80);	//0x37: The logic level for the INT pin is active low.
-
-	if(MPU6050_testConnection())
-	{
-		MPU6050_WirteByte(PWR_MGMT_1,0X01);		//0x6B：CLKSEL：PLL with X axis gyroscope reference
-		MPU6050_WirteByte(PWR_MGMT_2,0X00);		//0x6C:
-		MPU6050_WirteByte(SMPLRT_DIV, 0x01); 	//0x19: Sample Rate Divider: 50Hz
-		MPU6050_WirteByte(MPU6050_CONFIG, 0x02);//0x1A: DLPF = rate / 2
-	}
-	#endif
-}
-
-
-/*********************************************
-Function：short MPU_Get_Temperature(void)
-Description：Get MPU6050 temperature
-Input:None
-Return:
-		temperature * 100
-Others:None
-*********************************************/
+//得到温度值
+//返回值:温度值(扩大了100倍)
 short MPU_Get_Temperature(void)
 {
-	u8 H1, L1;
-	short raw;
-	float temp;
-
-  IIC_Start();
-  IIC_Send_Byte(MPU6050_DEVICE);              // Transmit device address + write signal
-  IIC_Send_Byte(TEMP_OUT_H);                         // Register address to be read
-  IIC_Start();
-  IIC_Send_Byte(MPU6050_DEVICE + 1);          // Transmit device address + read signal
-  H1 = IIC_Read_Byte(1);                      // Reading data and generate ACK
-  L1 = IIC_Read_Byte(0);                      // Read from low to high in order of address
-  IIC_Stop();
-
-  raw = (H1 << 8) + L1;
-
-	temp = 36.53 + ((double)raw)/340;
-
-	return temp * 100;;
+    u8 buf[2];
+    short raw;
+    float temp;
+    MPU_Read_Len(MPU_ADDR,MPU_TEMP_OUTH_REG,2,buf);
+    raw=((u16)buf[0]<<8)|buf[1];
+    temp=36.53+((double)raw)/340;
+    return temp*100;;
 }
-
-/*********************************************
-Function：void Get_Accel_Data(u8 reg)
-Description：Get MPU6050 accelerometer data
-Input:
-	u8 reg: Register address
-Return:None
-Others:None
-*********************************************/
-void Get_Accel_Data(u8 reg)
+//得到陀螺仪值(原始值)
+//gx,gy,gz:陀螺仪x,y,z轴的原始读数(带符号)
+//返回值:0,成功
+//    其他,错误代码
+u8 MPU_Get_Gyroscope(short *gx,short *gy,short *gz)
 {
-    u8 H1, L1;
-    u8 H2, L2;
-    u8 H3, L3;
-
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE);          // Transmit device address + write signal
-    IIC_Send_Byte(reg);                     // Register address to be read
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE + 1);      // Transmit device address + read signal
-    H1 = IIC_Read_Byte(1);                  // Reading data and generate ACK
-    L1 = IIC_Read_Byte(1);                  // Read from low to high in order of address
-    H2 = IIC_Read_Byte(1);
-    L2 = IIC_Read_Byte(1);
-    H3 = IIC_Read_Byte(1);
-    L3 = IIC_Read_Byte(0);
-    IIC_Stop();
-
-    g_MPU6050Data.accel_x = (H1 << 8) + L1;
-    g_MPU6050Data.accel_y = (H2 << 8) + L2;
-    g_MPU6050Data.accel_z = (H3 << 8) + L3;
+    u8 buf[6],res;
+    res=MPU_Read_Len(MPU_ADDR,MPU_GYRO_XOUTH_REG,6,buf);
+    if(res==0)
+    {
+    	*gx=((u16)buf[0]<<8)|buf[1];
+    	*gy=((u16)buf[2]<<8)|buf[3];
+    	*gz=((u16)buf[4]<<8)|buf[5];
+    }
+    return res;;
 }
-
-/*************************************
-Function：void Get_Gyro_Data(u8 reg)
-Description：Get MPU6050 gyro data
-Input:
-	u8 reg: Register address
-Return:None
-Others:None
-*************************************/
-void Get_Gyro_Data(u8 reg)
+//得到加速度值(原始值)
+//gx,gy,gz:陀螺仪x,y,z轴的原始读数(带符号)
+//返回值:0,成功
+//    其他,错误代码
+u8 MPU_Get_Accelerometer(short *ax,short *ay,short *az)
 {
-    u8 H1, L1;
-    u8 H2, L2;
-    u8 H3, L3;
-
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE);              // Transmit device address + write signal
-    IIC_Send_Byte(reg);                         // Register address to be read
-    IIC_Start();
-    IIC_Send_Byte(MPU6050_DEVICE + 1);          // Transmit device address + read signal
-    H1 = IIC_Read_Byte(1);                      // Reading data and generate ACK
-    L1 = IIC_Read_Byte(1);                      // Read from low to high in order of address
-    H2 = IIC_Read_Byte(1);
-    L2 = IIC_Read_Byte(1);
-    H3 = IIC_Read_Byte(1);
-    L3 = IIC_Read_Byte(0);
-    IIC_Stop();
-
-    g_MPU6050Data.gyro_x = (H1 << 8) + L1;
-    g_MPU6050Data.gyro_y = (H2 << 8) + L2;
-    g_MPU6050Data.gyro_z = (H3 << 8) + L3;
+    u8 buf[6],res;
+    res=MPU_Read_Len(MPU_ADDR,MPU_ACCEL_XOUTH_REG,6,buf);
+    if(res==0)
+    {
+    	*ax=((u16)buf[0]<<8)|buf[1];
+    	*ay=((u16)buf[2]<<8)|buf[3];
+    	*az=((u16)buf[4]<<8)|buf[5];
+    }
+    return res;;
 }
-
-/*************************************
-Function：void ReadFromIMU(void)
-Description：Read the data of the MPU6050, including the accelerometer and gyroscope
-Input:None
-Return:None
-Others:None
-*************************************/
-void ReadFromIMU(void)
+//IIC连续写
+//addr:器件地址
+//reg:寄存器地址
+//len:写入长度
+//buf:数据区
+//返回值:0,正常
+//    其他,错误代码
+u8 MPU_Write_Len(u8 addr,u8 reg,u8 len,u8 *buf)
 {
-    Get_Accel_Data(ACCEL_XOUT_H);       //accelerometer( total 3 data )
-    Get_Gyro_Data(GYRO_XOUT_H);         //gyroscope( total 3 data )
+    u8 i;
+    MPU_IIC_Start();
+    MPU_IIC_Send_Byte((addr<<1)|0);//发送器件地址+写命令
+    if(MPU_IIC_Wait_Ack())	//等待应答
+    {
+    	MPU_IIC_Stop();
+    	return 1;
+    }
+    MPU_IIC_Send_Byte(reg);	//写寄存器地址
+    MPU_IIC_Wait_Ack();		//等待应答
+    for(i=0;i<len;i++)
+    {
+    	MPU_IIC_Send_Byte(buf[i]);	//发送数据
+    	if(MPU_IIC_Wait_Ack())		//等待ACK
+    	{
+    		MPU_IIC_Stop();
+    		return 1;
+    	}
+    }
+    MPU_IIC_Stop();
+    return 0;
 }
-
-
-/*************************************
-Function：void IMU_Calibration(void)
-Description：MPU6050 Calibration
-Input:None
-Return:None
-Others:None
-*************************************/
-void IMU_Calibration(void)
+//IIC连续读
+//addr:器件地址
+//reg:要读取的寄存器地址
+//len:要读取的长度
+//buf:读取到的数据存储区
+//返回值:0,正常
+//    其他,错误代码
+u8 MPU_Read_Len(u8 addr,u8 reg,u8 len,u8 *buf)
 {
-	u8 i;
-
-	for (i = 0; i < 30; i++)	// Continuous sampling 30 times, total time consuming : 30 * 3 = 90ms
-	{
-		ReadFromIMU();			// Read the data of MPU6050
-		g_Gyro_xoffset += g_MPU6050Data.gyro_x;
-		g_Gyro_yoffset += g_MPU6050Data.gyro_y;
-		g_Gyro_zoffset += g_MPU6050Data.gyro_z;
-		delay_ms(3);
-	}
-	g_Gyro_xoffset /= 30;		// Get calibration offset
-	g_Gyro_yoffset /= 30;
-	g_Gyro_zoffset /= 30;
+    	MPU_IIC_Start();
+    MPU_IIC_Send_Byte((addr<<1)|0);//发送器件地址+写命令
+    if(MPU_IIC_Wait_Ack())	//等待应答
+    {
+    	MPU_IIC_Stop();
+    	return 1;
+    }
+    MPU_IIC_Send_Byte(reg);	//写寄存器地址
+    MPU_IIC_Wait_Ack();		//等待应答
+    MPU_IIC_Start();
+    MPU_IIC_Send_Byte((addr<<1)|1);//发送器件地址+读命令
+    MPU_IIC_Wait_Ack();		//等待应答
+    while(len)
+    {
+    	if(len==1)*buf=MPU_IIC_Read_Byte(0);//读数据,发送nACK
+    	else *buf=MPU_IIC_Read_Byte(1);		//读数据,发送ACK
+    	len--;
+    	buf++;
+    }
+    MPU_IIC_Stop();	//产生一个停止条件
+    return 0;
+}
+//IIC写一个字节
+//reg:寄存器地址
+//data:数据
+//返回值:0,正常
+//    其他,错误代码
+u8 MPU_Write_Byte(u8 reg,u8 data)
+{
+    MPU_IIC_Start();
+    MPU_IIC_Send_Byte((MPU_ADDR<<1)|0);//发送器件地址+写命令
+    if(MPU_IIC_Wait_Ack())	//等待应答
+    {
+    	MPU_IIC_Stop();
+    	return 1;
+    }
+    MPU_IIC_Send_Byte(reg);	//写寄存器地址
+    MPU_IIC_Wait_Ack();		//等待应答
+    MPU_IIC_Send_Byte(data);//发送数据
+    if(MPU_IIC_Wait_Ack())	//等待ACK
+    {
+    	MPU_IIC_Stop();
+    	return 1;
+    }
+    MPU_IIC_Stop();
+    return 0;
+}
+//IIC读一个字节
+//reg:寄存器地址
+//返回值:读到的数据
+u8 MPU_Read_Byte(u8 reg)
+{
+    u8 res;
+    MPU_IIC_Start();
+    MPU_IIC_Send_Byte((MPU_ADDR<<1)|0);//发送器件地址+写命令
+    MPU_IIC_Wait_Ack();		//等待应答
+    MPU_IIC_Send_Byte(reg);	//写寄存器地址
+    MPU_IIC_Wait_Ack();		//等待应答
+    MPU_IIC_Start();
+    MPU_IIC_Send_Byte((MPU_ADDR<<1)|1);//发送器件地址+读命令
+    MPU_IIC_Wait_Ack();		//等待应答
+    res=MPU_IIC_Read_Byte(0);//读取数据,发送nACK
+    MPU_IIC_Stop();			//产生一个停止条件
+    return res;
 }
