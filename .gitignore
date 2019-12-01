@@ -62,6 +62,7 @@ iap/project/
 
 # Source insight 
 iap/si/
+wall-e/Sourceinsight
 
 # Jlink
 wall-e/Project/JLink.exe
