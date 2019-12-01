@@ -5,17 +5,13 @@ DIR_DRIVERS   += ../Drivers/delay/
 DIR_DRIVERS   += ../Drivers/timer/
 DIR_DRIVERS   += ../Drivers/pwm/
 DIR_DRIVERS   += ../Drivers/nvic/
+DIR_DRIVERS   += ../Drivers/exti/
 DIR_DRIVERS   += ../Drivers/debug_usart1/
-DIR_DRIVERS   += ../Drivers/bluetooth_usart3/
-DIR_DRIVERS   += ../Drivers/imu_iic/
-DIR_DRIVERS   += ../Drivers/oled_iic/
 
 DIR_MODULES   += ../Modules/led/
 DIR_MODULES   += ../Modules/mpu6050/
 DIR_MODULES   += ../Modules/mpu6050/eMPL/
-DIR_MODULES   += ../Modules/bluetooth/
 DIR_MODULES   += ../Modules/encoder/
-DIR_MODULES   += ../Modules/oled/
 DIR_MODULES   += ../Modules/motor/
 DIR_MODULES   += ../Modules/segger/
 
@@ -67,7 +63,8 @@ OPT   += -fdata-sections
 
 #SPECS := --specs=rdimon.specs -u _printf_float
 #For use printf
-SPECS := --specs=nosys.specs -u _printf_float
+SPECS := --specs=nosys.specs -u _printf_float -specs=nano.specs
+
 
 FLAGS_MCU := -mcpu=$(MCU)
 FLAGS_AS  := $(SPECS) $(FLAGS_MCU) $(OPT) -c -g -gdwarf-2 -mthumb
@@ -79,7 +76,7 @@ FLAGS_CXX := $(SPECS) $(FLAGS_MCU) $(OPT) -c -g -gdwarf-2 -mthumb \
              $(DEFS)
 FLAGS_LD  := $(SPECS) $(FLAGS_MCU) $(OPT) -lm -g -gdwarf-2 -mthumb \
              -nostartfiles -Xlinker --gc-sections -T$(LINK_SCRIPT) \
-             -Wl,-Map=$(PROJECT).map,--cref,--no-warn-mismatch
+             -Wl,-Map=$(PROJECT).map,--cref,--no-warn-mismatch 
 
 TYPE_BURN  := openocd_swd_flash
 TYPE_DEBUG := openocd_swd_debug
