@@ -20,12 +20,40 @@ Log
       - cd到该插件目录下，执行 `npm install`，安装完成。
         - 安装过程中，npm install 报错`still pacote range manifest xxx` 的解决方法：
           - `npm config set registry https://registry.npm.taobao.org`
+          - 验证：`npm config get registry`
   - Atom 安装插件记录：
     - `goto-definition`：跳转到定义处
+    
     - `highlight-selected`：选中内容高亮
+    
     - `minimap`：代码缩略图
+    
     - `minimap-highlight-selected`：minimap 中高亮选择内容
-    - `script`：在atom下运行脚本
+    
+    - `script`：在 atom 下运行脚本
+    
+      - `ctrl + shift + p`：
+    
+    - `convert-to-utf8`：自动转换为 utf-8
+    
+    - `copy-filename`：复制文件名
+    
+    - `sync-settings`：备份插件
+    
+      - 参考：https://www.jianshu.com/p/bd006b349d03
+    
+      - 修改 host 解决无法访问 gist 问题。
+    
+        - (1) `ping 192.30.253.119` 测试可以访问；
+    
+        - (2) `sudo vi /etc/hosts` 添加如下语句：
+    
+          ```shell
+          192.30.253.118 gist.github.com
+          192.30.253.119 gist.github.com
+          ```
+    
+          
 
 
 
