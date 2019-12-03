@@ -1,5 +1,49 @@
 Log
 
+- ##### 20191202
+
+  - `GPIOB_Pin3`、`GPIOB_Pin4` 模拟I2C无法输出波形：
+  
+    - `GPIOB_Pin3`、`GPIOB_Pin4` 默认为 `JTDO`、`JNTRST `功能，作为普通 GPIO 输出需要使用 Remap 功能做重定向。
+    - 使用 Remap 功能：
+      - (1) 开启 RCC_APB2Periph_AFIO 时钟。
+        - `RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB | RCC_APB2Periph_AFIO , ENABLE);`
+      - (2)  开启  Remap 的目标端口。此处为失能掉 JTAG。
+        - `GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable,ENABLE); `
+    
+  - **ARM GCC 压缩编译生成的固件大小的编译参数**：
+  
+    - 编译参数 `-ffunction-sections` 、` -fdata-sections` 和链接参数 `--gc-sections`：
+  
+      - 使用`-ffunction-sections`, `-fdata-sections` 使 compiler 为每个 function 和 data item 分配独立的 section。
+      - `--gc-sections` 会使 ld 删除没有被使用的 section。
+  
+    - 编译参数 `-fno-rtti`、` -fno-exceptions`：
+  
+      - `-fno-rtti`： Don't generate runtime type idertification (RTTI)。 
+      - `-fno-exceptions`：Don't catch exceptions。
+  
+    - 编译参数 `-Os`：
+  
+      - Optimize gennerated code(for size) [-Os]。
+      - 除了 `-Os` 外，还有 `-O0`  、`-O1`、  `-O2`、 `-O3`、 `-Ofast`。
+  
+    - 链接参数`--specs=nano.specs`：
+  
+      - 使用静态库 `libc_nano.a` 、`libstdc++_nano.a`、 `libsupc++_nano.a`  替换默认的静态库 `libc.a`、   `libstdc++.a`、 `libsupc++.a` ，这样可以大大减小固件。
+  
+    - `-g`  、`-g1`、 `-g2`、 `-g3` ：
+  
+      - 调试信息，也会影响生成固件的大小。
+  
+      - [待考证]：
+  
+        > .debug 是一些调试信息的段 (section)，这些段会链接到目标文件 (.elf) 中，但它们的段标志为 0（不分配地址空间，不执行），并且这些段也不包含在程序头（program header）中，就不会写入 hex 以及单片机中。这些段就相当于文件附加的说明，它们的作用，就仅仅限于被调试程序读取并展现给你。
+
+
+
+
+
 - ##### 20191127
 
   - 修复使用JLink-RTT作为`printf`输出调试日志问题。
